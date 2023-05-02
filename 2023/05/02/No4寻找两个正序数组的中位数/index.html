@@ -16,7 +16,7 @@
 <meta property="og:description" content="第四题.寻找两个正序数组的中位数">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-02T04:28:02.000Z">
-<meta property="article:modified_time" content="2023-05-02T08:22:37.834Z">
+<meta property="article:modified_time" content="2023-05-02T11:01:07.491Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -184,7 +184,7 @@
 
 <h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。算法的时间复杂度应该为 O(log (m+n)) 。  </p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/median-of-two-sorted-arrays/">https://leetcode.cn/problems/median-of-two-sorted-arrays/</a>)  </p>
-<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>最简单的就是将两个数组合并之后排序，但题目要求算法的时间复杂度应该为O(log(m+n))。所以，该方法并达不到要求（提交可以成功）。根据该时间复杂度要求，我们应该使用二分查找方法。当m+n为奇数时，他们的中位数就是他们的第(m+n+1)&#x2F;2个元素，当m+n为偶数时，他们的中位数就是第(m+n)&#x2F;2和第(m+n)&#x2F;2+1个元素的平均数，因此，该题可以转换为用二分法寻找第(m+n)&#x2F;2或第(m+n)&#x2F;2-1个元素。令k&#x3D;(m+n)&#x2F;2，假设由A，B两个数组，则判断A[k&#x2F;2-1]和B[k&#x2F;2-1]的大小，如果A[k&#x2F;2-1]&lt;&#x3D;B[k&#x2F;2-1]，那么可以排除A[0]<del>A[k&#x2F;2-1]的元素，如果a[k&#x2F;2-1]&gt;B[k&#x2F;2-1]，那么可以排除B[0]</del>B[k&#x2F;2-1]的元素，这样我们就把寻找范围缩小一半，同时在排除后的数组中继续寻找，并且改变k值。当然要考虑数组越界，数组本来为空或者元素个数为1的特殊情况。  </p>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>最简单的就是将两个数组合并之后排序，但题目要求算法的时间复杂度应该为O(log(m+n))。所以，该方法并达不到要求（提交可以成功）。根据该时间复杂度要求，我们应该使用二分查找方法。当m+n为奇数时，他们的中位数就是他们的第(m+n+1)&#x2F;2个元素，当m+n为偶数时，他们的中位数就是第(m+n)&#x2F;2和第(m+n)&#x2F;2+1个元素的平均数，因此，该题可以转换为用二分法寻找第(m+n)&#x2F;2或第(m+n)&#x2F;2-1个元素。令k&#x3D;(m+n)&#x2F;2，假设由A，B两个数组，则判断A[k&#x2F;2-1]和B[k&#x2F;2-1]的大小，如果A[k&#x2F;2-1]&lt;&#x3D;B[k&#x2F;2-1]，那么可以排除A[0] ~ A[k&#x2F;2-1]的元素，如果a[k&#x2F;2-1]&gt;B[k&#x2F;2-1]，那么可以排除B[0] ~ B[k&#x2F;2-1]的元素，这样我们就把寻找范围缩小一半，同时在排除后的数组中继续寻找，并且改变k值。当然要考虑数组越界，数组本来为空或者元素个数为1的特殊情况。  </p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 
