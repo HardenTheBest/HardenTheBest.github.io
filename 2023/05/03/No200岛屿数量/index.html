@@ -6,17 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>No74搜索二维矩阵 | Hexo</title>
+  <title>No200岛屿数量 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="第74题.搜索二维矩阵">
+  <meta name="description" content="第200题.岛屿数量">
 <meta property="og:type" content="article">
-<meta property="og:title" content="No74搜索二维矩阵">
-<meta property="og:url" content="http://example.com/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/index.html">
+<meta property="og:title" content="No200岛屿数量">
+<meta property="og:url" content="http://example.com/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="第74题.搜索二维矩阵">
+<meta property="og:description" content="第200题.岛屿数量">
 <meta property="og:locale" content="en_US">
-<meta property="article:published_time" content="2023-05-03T10:13:47.000Z">
-<meta property="article:modified_time" content="2023-05-03T10:20:23.059Z">
+<meta property="article:published_time" content="2023-05-03T12:54:45.000Z">
+<meta property="article:modified_time" content="2023-05-03T13:04:57.814Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -160,62 +160,76 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-No74搜索二维矩阵" class="article article-type-post " itemscope itemprop="blogPost">
+            <article id="post-No200岛屿数量" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 class="article-title" itemprop="name">
-      No74搜索二维矩阵
+      No200岛屿数量
     </h1>
   
 
         
-        <a href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="archive-article-date">
-  	<time datetime="2023-05-03T10:13:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
+        <a href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/" class="archive-article-date">
+  	<time datetime="2023-05-03T12:54:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="第74题-搜索二维矩阵"><a href="#第74题-搜索二维矩阵" class="headerlink" title="第74题.搜索二维矩阵"></a>第74题.搜索二维矩阵</h1><span id="more"></span>  
+        <h1 id="第200题-岛屿数量"><a href="#第200题-岛屿数量" class="headerlink" title="第200题.岛屿数量"></a>第200题.岛屿数量</h1><span id="more"></span>  
 
-<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>编写一个高效的算法来判断 m x n 矩阵中，是否存在一个目标值。该矩阵具有如下特性：<br>每行中的整数从左到右按升序排列。<br>每行的第一个整数大于前一行的最后一个整数。  </p>
-<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-a-2d-matrix/">https://leetcode.cn/problems/search-a-2d-matrix/</a>)  </p>
-<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>该题就是一维有序数组查找元素的变题，使用我们仍然可以用二分查找的方法解决。唯一变化的就是寻找中间数的时候要回归到二维矩阵中去。时间复杂度为O($logm*n$)。  </p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给你一个由 ‘1’（陆地）和 ‘0’（水）组成的的二维网格，请你计算网格中岛屿的数量。岛屿总是被水包围，并且每座岛屿只能由水平方向和&#x2F;或竖直方向上相邻的陆地连接形成。此外，你可以假设该网格的四条边均被水包围。  </p>
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/number-of-islands/">https://leetcode.cn/problems/number-of-islands/</a>)  </p>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>该题可以用深度优先搜索的方法进行解决，我们可以遍历整个二维网络，找到一个为陆地的位置，然后深度优先搜索与之相连的陆地，并将其改为水(‘0’)，主要可以避免重复。每搜索到一处陆地，数量就加1，直到遍历完整个二维网络，返回数量。  </p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 
 using namespace std;
 
-bool searchMatrix(vector&lt;vector&lt;int&gt;&gt;&amp; matrix, int target) &#123;
-    int m = matrix.size();
-    int n = matrix[0].size();
-    int l = 0, r = m * n - 1;
-    while (l &lt;= r) &#123;
-        int mid = (l + r) / 2;
-        int x = matrix[mid / n][mid % n];
-        if (x == target) return true;
-        else if (x &gt; target) &#123;
-            r = mid - 1;
-        &#125;
-        else &#123;
-            l = mid + 1;
+void dfs(vector&lt;vector&lt;char&gt;&gt;&amp; grid, int row, int col) &#123;
+    int rows = grid.size();
+    int cols = grid[0].size();
+
+    grid[row][col] = &#39;0&#39;;
+
+    if (row - 1 &gt;= 0 &amp;&amp; grid[row - 1][col] == &#39;1&#39;) dfs(grid, row - 1, col);
+    if (row + 1 &lt; rows &amp;&amp; grid[row + 1][col] == &#39;1&#39;) dfs(grid, row + 1, col);
+    if (col - 1 &gt;= 0 &amp;&amp; grid[row][col - 1] == &#39;1&#39;) dfs(grid, row, col - 1);
+    if (col + 1 &lt; cols &amp;&amp; grid[row][col + 1] == &#39;1&#39;) dfs(grid, row, col + 1);
+&#125;
+
+int numIslands(vector&lt;vector&lt;char&gt;&gt;&amp; grid) &#123;
+
+    if (grid.empty()) return 0;
+
+    int rows = grid.size();
+    int cols = grid[0].size();
+
+    int count = 0;
+
+    for (int i = 0; i &lt; rows; i++) &#123;
+        for (int j = 0; j &lt; cols; j++) &#123;
+            if (grid[i][j] == &#39;1&#39;) &#123;
+                ++count;
+                dfs(grid, i, j);
+            &#125;
         &#125;
     &#125;
-    return false;
+
+    return count;
 &#125;
 
 int main() &#123;
-    vector&lt;vector&lt;int&gt;&gt; matrix&#123; &#123;1,3,5,7&#125;,&#123;10,11,16,20&#125;,&#123;23,30,34,60&#125; &#125;;
-    int target = 3;
-    cout &lt;&lt; searchMatrix(matrix, target) &lt;&lt; endl;
-&#125; 
+    vector&lt;vector&lt;char&gt;&gt; grid&#123; &#123;&#39;1&#39;,&#39;1&#39;,&#39;0&#39;,&#39;0&#39;,&#39;0&#39;&#125;,&#123;&#39;1&#39;,&#39;1&#39;,&#39;0&#39;,&#39;0&#39;,&#39;0&#39;&#125;,
+        &#123;&#39;0&#39;,&#39;0&#39;,&#39;1&#39;,&#39;0&#39;,&#39;0&#39;&#125;,&#123;&#39;0&#39;,&#39;0&#39;,&#39;0&#39;,&#39;1&#39;,&#39;1&#39;&#125; &#125;;
+    cout &lt;&lt; numIslands(grid) &lt;&lt; endl;
+&#125;  
 </code></pre>
-<h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2><p>由于该题比较简单，没有什么大的错误。</p>
-
+<h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2>
       
 
       
@@ -294,7 +308,7 @@ int main() &#123;
     <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
     <p>扫一扫，分享到微信</p>
     <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" alt="微信分享二维码">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/" alt="微信分享二维码">
     </div>
 </div>
 
@@ -308,18 +322,9 @@ int main() &#123;
   
 <nav id="article-nav">
   
-    <a href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          No200岛屿数量
-        
-      </div>
-    </a>
   
-  
-    <a href="/2023/05/03/No658%E6%89%BE%E5%88%B0k%E4%B8%AA%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E5%85%83%E7%B4%A0/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">No658找到k个最接近的元素</div>
+    <a href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">No74搜索二维矩阵</div>
       <i class="icon-circle-right"></i>
     </a>
   
@@ -346,7 +351,7 @@ int main() &#123;
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC74%E9%A2%98-%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5"><span class="toc-number">1.</span> <span class="toc-text">第74题.搜索二维矩阵</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.</span> <span class="toc-text">解决过程中出现的问题</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC200%E9%A2%98-%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F"><span class="toc-number">1.</span> <span class="toc-text">第200题.岛屿数量</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5"><span class="toc-number">1.2.</span> <span class="toc-text">链接</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E6%B3%95"><span class="toc-number">1.3.</span> <span class="toc-text">解法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.4.</span> <span class="toc-text">代码</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E8%BF%87%E7%A8%8B%E4%B8%AD%E5%87%BA%E7%8E%B0%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.</span> <span class="toc-text">解决过程中出现的问题</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
