@@ -16,7 +16,7 @@
 <meta property="og:description" content="第三章.动态规划">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-18T01:40:17.000Z">
-<meta property="article:modified_time" content="2023-05-18T02:02:27.753Z">
+<meta property="article:modified_time" content="2023-05-18T06:59:31.754Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -215,7 +215,129 @@ int main() &#123;
   
 </code></pre>
 <hr>
-<h2 id="最大字段和"><a href="#最大字段和" class="headerlink" title="最大字段和"></a>最大字段和</h2>
+<h2 id="最大字段和"><a href="#最大字段和" class="headerlink" title="最大字段和"></a>最大字段和</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>给定有n个整数（可能为负整数）组成的序列a1,a2,…,an，求该序列的连续字段和的最大值。当所有整数均为负数时定义其最大字段和为0。  </p>
+<h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>利用动态规划算法，定义一个一维数组dp(n)，n为数组的大小；dp[i]表示包含nums[i]的最大字段和的大小，所以dp[i]&#x3D;max(dp[i-1]+nums[i],nums[i])，我们可以定义一个变量maxSum来记录最大值,最后判断maxSum即可，当maxSum为负数时，说明数组nums中的元素均为负数，所以返回0，否则返回maxSum。  </p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+int maxSubArray(vector&lt;int&gt;&amp; nums) &#123;
+    int n = nums.size();
+    vector&lt;int&gt; dp(n);
+    int maxSum = nums[0];
+    dp[0] = nums[0];
+    for (int i = 1; i &lt; n; i++) 
+    &#123;
+        dp[i] = max(dp[i - 1] + nums[i], nums[i]);
+        maxSum = max(maxSum, dp[i]);
+    &#125;
+    return maxSum &lt; 0 ? 0 : maxSum;
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; nums&#123; -2,1,-3,4,-1,2,1,-5,4 &#125;;
+    cout &lt;&lt; maxSubArray(nums) &lt;&lt; endl;
+&#125;  
+  
+</code></pre>
+<hr>
+<h2 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>给定n种物品和一背包。物体i的重量是wi，其价值为vi，背包的容量为c。问应如何选择转入背包中的物品，使得装入背包中物品的总价值最大。  </p>
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>该题是典型的动态规划问题。定义集合dp，dp[i][j] 表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少。从dp[i][j]的定义出发，如果背包容量j为0的话，即dp[i][0]，无论是选取哪些物品，背包价值总和一定为0。当容量j不足以再将物品i加入时，dp[i][j]&#x3D;dp[i-1][j];当将物品i加入时，dp[i][j]&#x3D;dp[i-1][j-wi]+v[i]。所以dp[i][j]&#x3D;max(dp[i-1][j],dp[i-1][j-w1]+v[i])。最后返回dp[m-1][n]，m为物品种类，n为背包容量。  </p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+int maxBagValue(vector&lt;int&gt;&amp; weights, vector&lt;int&gt;&amp; values,int capacity)
+&#123;
+    int m = weights.size();
+    vector&lt;vector&lt;int&gt;&gt; dp(m, vector&lt;int&gt;(capacity + 1, 0));
+    for (int i = weights[0]; i &lt;= capacity; i++)
+    &#123;
+        dp[0][i] = values[0];
+    &#125;
+    for (int i = 1; i &lt; m; i++)
+    &#123;
+        for (int j = 0; j &lt;= capacity; j++)
+        &#123;
+            if (j &lt; weights[i]) dp[i][j] = dp[i - 1][j];
+            else dp[i][j] = max(dp[i - 1][j], dp[i - 1][j - weights[i]] + values[i]);
+        &#125;
+    &#125;
+    return dp[m - 1][capacity];
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; weights&#123; 1,3,4 &#125;;
+    vector&lt;int&gt; values&#123; 15,20,30 &#125;;
+    int capacity = 4;
+    cout &lt;&lt; maxBagValue(weights, values, capacity) &lt;&lt; endl;
+&#125;  
+  
+</code></pre>
+<hr>
+<h2 id="矩阵连乘问题"><a href="#矩阵连乘问题" class="headerlink" title="矩阵连乘问题"></a>矩阵连乘问题</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定n个矩阵{A1,A2,…,An}，其中Ai与Ai+1时可连乘的。由于矩阵乘法满足结合律，因此计算矩阵的连乘积可以有不同的计算次序。这种计算次序可以用加括号的方式来确定。求找到一种计算次数最少的方式。  </p>
+<h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>A[i:j]表示矩阵Ai…Aj的连乘，计算A[1:n]的最优计算次序，即先计算A[1:k]和A[k+1:n]，再将计算结果相乘，得到A[1:n]。依次计算顺序，总计算量为A[1:k]的计算量加上A[k+1:n]的计算量，再加上A[i:k]和A[k+1:n]相乘的计算量。设计算A[i:j]（1&lt;&#x3D;i&lt;&#x3D;j&lt;&#x3D;n），所需的最少书城次数为m[i][j]，则原问题的最优解为m[1][n]；当i&#x3D;&#x3D;j，m[i][j]&#x3D;0；当i &lt; j，m[i][j]&#x3D;m[i][k]+m[k+1][j]+$p_{i-1}$ $p_k$ $p_{j}$ 。  </p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+void MatrixChain(const vector&lt;int&gt;&amp; p, vector&lt;vector&lt;int&gt;&gt;&amp; m, vector&lt;vector&lt;int&gt;&gt;&amp; s)
+&#123;
+    int n = p.size() - 1;
+    m.resize(n + 1, vector&lt;int&gt;(n + 1, INT_MAX));
+    s.resize(n + 1, vector&lt;int&gt;(n + 1, 0));
+    for (int i = 1; i &lt;= n; i++)
+    &#123;
+        m[i][i] = 0;
+    &#125;for (int r = 2; r &lt;= n; r++)
+    &#123;
+        for (int i = 1; i &lt;= n - r + 1; i++)
+        &#123;
+            int j = i + r - 1;
+            m[i][j] = m[i + 1][j] + p[i - 1] * p[i] * p[j];
+            s[i][j] = i;
+            for (int k = i + 1; k &lt; j; k++)
+            &#123;
+                int t = m[i][k] + m[k + 1][j] + p[i - 1] * p[k] * p[j];
+                if (t &lt; m[i][j])
+                &#123;
+                    m[i][j] = t;
+                    s[i][j] = k;
+                &#125;
+            &#125;
+        &#125;
+    &#125;
+&#125;
+
+void TrackBack(int i, int j, const vector&lt;vector&lt;int&gt;&gt;&amp; s)
+&#123;
+    if (i == j)return;
+    TrackBack(i, s[i][j], s);
+    TrackBack(s[i][j] + 1, j, s);
+    cout &lt;&lt; &quot;Multiply A&quot; &lt;&lt; i &lt;&lt; &quot;,&quot; &lt;&lt; s[i][j];
+    cout &lt;&lt; &quot; and A &quot; &lt;&lt; (s[i][j] + 1) &lt;&lt; &quot;,&quot; &lt;&lt; j &lt;&lt; &quot;\n&quot;;
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; p = &#123; 30,35,15,5,10,20,25 &#125;;
+    vector&lt;vector&lt;int&gt;&gt; m, s;
+    MatrixChain(p, m, s);
+    cout &lt;&lt; m[1][p.size() - 1] &lt;&lt; endl;
+    TrackBack(1, p.size() - 1, s);
+    cout &lt;&lt; endl;
+&#125;  
+</code></pre>
+<hr>
+<h2 id="最优二叉搜索树"><a href="#最优二叉搜索树" class="headerlink" title="最优二叉搜索树"></a>最优二叉搜索树</h2>
       
 
       
@@ -337,7 +459,7 @@ int main() &#123;
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="toc-number">1.</span> <span class="toc-text">第三章.动态规划</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97"><span class="toc-number">1.1.</span> <span class="toc-text">最长公共子序列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E5%AD%97%E6%AE%B5%E5%92%8C"><span class="toc-number">1.2.</span> <span class="toc-text">最大字段和</span></a></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E7%AB%A0-%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92"><span class="toc-number">1.</span> <span class="toc-text">第三章.动态规划</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E9%95%BF%E5%85%AC%E5%85%B1%E5%AD%90%E5%BA%8F%E5%88%97"><span class="toc-number">1.1.</span> <span class="toc-text">最长公共子序列</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E5%AD%97%E6%AE%B5%E5%92%8C"><span class="toc-number">1.2.</span> <span class="toc-text">最大字段和</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#01%E8%83%8C%E5%8C%85%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">01背包问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%9F%A9%E9%98%B5%E8%BF%9E%E4%B9%98%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">矩阵连乘问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E4%BA%8C%E5%8F%89%E6%90%9C%E7%B4%A2%E6%A0%91"><span class="toc-number">1.5.</span> <span class="toc-text">最优二叉搜索树</span></a></li></ol></li></ol>
                     </div>
                 </span>
             </div>
