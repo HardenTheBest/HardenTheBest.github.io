@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Archives | Hexo</title>
+  <title>贪心算法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/archives/index.html">
+  <meta name="description" content="第四章.贪心算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="贪心算法">
+<meta property="og:url" content="http://example.com/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第四章.贪心算法">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-19T02:45:54.000Z">
+<meta property="article:modified_time" content="2023-05-19T05:51:04.770Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -156,295 +160,422 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
+            <article id="post-贪心算法" class="article article-type-post " itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 class="article-title" itemprop="name">
+      贪心算法
+    </h1>
   
-    
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2023" class="archive-year">2023</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="archive-article-date">
+
+        
+        <a href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="archive-article-date">
   	<time datetime="2023-05-19T02:45:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-19</time>
 </a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">贪心算法</a>
-    </h1>
-  
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="第四章-贪心算法"><a href="#第四章-贪心算法" class="headerlink" title="第四章.贪心算法"></a>第四章.贪心算法</h1><span id="more"></span>  
+<h2 id="活动安排"><a href="#活动安排" class="headerlink" title="活动安排"></a>活动安排</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>有n个活动的集合E&#x3D;{1,2,…,n}，其中每个活动都要求使用同一资源，如演讲会场等，而在同一时间内只有一个活动能使用这一资源。每个活动i都有要求使用该资源的起始时间$s_i$ 和 结束时间$f_i$ ，且$s_i$ &lt; $f_i$。如果选择了活动i，那么在该活动的起始时间到结束时间里，资源都分配给了该活动，如果有两个活动它们的活动时间没有交叉，就说明它们时相容的。活动安排问题就是选出最大的相容活动子集合。  </p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>活动安排问题是可以用贪心算法有效求解的一个很好的例子。各活动的起始时间与结束时间分别存储在数组s和f中，如何按照结束时间将它们进行排序。算法一开始将选择活动1，然后根据结束时间先后挑选下一个与前面活动相容的活动，因此算法每次总是选择具有最早完成时间的相容活动加入到集合中。按这种方法选择相容活动为未安排活动留下尽可能多的时间。也就是说，该算法的贪心选择意义是，使剩余的可安排时间段极大化，以便安排尽可能多的相容活动。  </p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
 
-        <div class="article-info info-on-right">
-          
-          
+using namespace std;
 
+void actSort(vector&lt;int&gt;&amp; s, vector&lt;int&gt;&amp; f, int l, int r)
+&#123;
+    if (l &gt;= r)return;
+    int i = l, j = r, pivot = f[l + (r - l) / 2];
+    while (i &lt;= j)
+    &#123;
+        while (f[i] &lt; pivot)i++;
+        while (f[j] &gt; pivot)j--;
+        if (i &lt;= j)
+        &#123;
+            swap(f[i], f[j]);
+            swap(s[i], s[j]);
+            i++;
+            j--;
+        &#125;
+    &#125;
+    actSort(s, f, l, j);
+    actSort(s, f, i, r);
+&#125;
+
+void GreedySelector(vector&lt;int&gt;&amp; s, vector&lt;int&gt;&amp; f, vector&lt;bool&gt;&amp; result)
+&#123;
+    int endTime = f[0];
+    result[0] = true;
+    for (int i = 1; i &lt; f.size(); i++)
+    &#123;
+        if (s[i] &gt;= endTime)
+        &#123;
+            endTime = f[i];
+            result[i] = true;
+        &#125;
+        else
+        &#123;
+            result[i] = false;
+        &#125;
+    &#125;
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; s&#123; 1,3,0,5,3,5,6,8,8,2,12 &#125;;
+    vector&lt;int&gt; f&#123; 4,5,6,7,8,9,10,11,12,13,14 &#125;;
+    actSort(s, f, 0, f.size() - 1);
+    vector&lt;bool&gt; result(f.size());
+    GreedySelector(s, f, result);
+    for (int i = 0; i &lt; result.size(); i++)
+    &#123;
+        if (result[i] == true)
+        &#123;
+            cout &lt;&lt; s[i] &lt;&lt; &quot; &quot; &lt;&lt; f[i] &lt;&lt; endl;
+        &#125;
+    &#125;
+&#125;  
+  
+</code></pre>
+<hr>
+<h2 id="最优装载"><a href="#最优装载" class="headerlink" title="最优装载"></a>最优装载</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>有一批集装箱要装上一艘重量为c的轮船。其中集装箱i的重量为 $w_i$ 。最优装载问题要求在装载体积不受限制的情况下，将尽可能多的集装箱装上轮船。  </p>
+<h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>最优装载问题可用贪心算法求解。采用重量最轻者先装的贪心选择策略，可产生最优装载问题的最优解。  </p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+
+using namespace std;
+
+void Loading(vector&lt;int&gt;&amp; w, int c, vector&lt;bool&gt;&amp; load)
+&#123;
+    sort(w.begin(), w.end());
+    for (int i = 0; i &lt; w.size(); i++)
+    &#123;
+        if (c &gt;= w[i])
+        &#123;
+            load[i] = true;
+            c -= w[i];
+        &#125;
+        else 
+        &#123;
+            break;
+        &#125;
+    &#125;
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; w&#123; 1,3,2,6,7,4,7 &#125;;
+    vector&lt;bool&gt; load(w.size(), false);
+    int c = 12;
+    Loading(w, c, load);
+    for (int i = 0; i &lt; load.size(); i++)
+    &#123;
+        if (load[i] == true)
+        &#123;
+            cout &lt;&lt; w[i] &lt;&lt; &quot; &quot;;
+        &#125;
+    &#125;
+    cout &lt;&lt; endl;
+&#125;  
+  
+</code></pre>
+<hr>
+<h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>哈夫曼编码使广泛用于数据文件压缩的十分有效的编码方法。哈夫曼编码算法使用字符在文件中出现的频率表来建立一个用0、1串表示各字符的最优表示方式。给出现频率高的字符较短的编码，出现频率较低的字符以较长的编码，可以大大缩短总码长。  </p>
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>哈夫曼算法以自底向上的方式构造表示最优前缀码的二叉树T。算法以C个叶节点开始，执行C-1次的合并运算后产生最终所要求的树T。编码字符集中每一个字符c的频率是f(c)。以f为键值的优先队列Q用在做贪心选择时有效地确定算法当前要合并的两棵具有最小频率的树。一旦两颗具有最小频率的树合并后，产生一棵新的树，其频率为合并的两棵树的频率之和并将新树插入优先队列Q。  </p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include &lt;iostream&gt;
+#include &lt;string&gt;
+#include &lt;unordered_map&gt;
+#include &lt;queue&gt;
+
+using namespace std;
+
+// 定义节点类
+class Node &#123;
+public:
+    char val;
+    int freq;
+    Node* left;
+    Node* right;
+    Node(char val, int freq) : val(val), freq(freq), left(nullptr), right(nullptr) &#123;&#125;
+    bool operator&lt;(const Node&amp; other) const &#123;
+        //因为优先队列为最大堆，而我们要的队列是频率小的在前，所以符号要改
+        return freq &gt; other.freq;
+    &#125;
+&#125;;
+
+// 构建哈夫曼树
+Node* build_huffman_tree(const unordered_map&lt;char, int&gt;&amp; freq_dict) &#123;
+    //优先队列默认为最大堆
+    priority_queue&lt;Node&gt; heap;
+    for (const auto&amp; entry : freq_dict) &#123;
+        heap.push(Node(entry.first, entry.second));
+    &#125;
+
+    while (heap.size() &gt; 1) &#123;
+        Node* left = new Node(heap.top());
+        heap.pop();
+        Node* right = new Node(heap.top());
+        heap.pop();
+        Node* new_node = new Node(&#39;\0&#39;, left-&gt;freq + right-&gt;freq);
+        new_node-&gt;left = left;
+        new_node-&gt;right = right;
+        heap.push(*new_node);
+    &#125;
+
+    return new Node(heap.top());
+&#125;
+
+// 递归获取哈夫曼编码
+void get_huffman_code(Node* root, unordered_map&lt;char, string&gt;&amp; code_dict, string code = &quot;&quot;) &#123;
+    if (root-&gt;val != &#39;\0&#39;) &#123;
+        code_dict[root-&gt;val] = code;
+        return;
+    &#125;
+
+    get_huffman_code(root-&gt;left, code_dict, code + &#39;0&#39;);
+    get_huffman_code(root-&gt;right, code_dict, code + &#39;1&#39;);
+&#125;
+
+// 统计字符频率并计算哈夫曼编码
+unordered_map&lt;char, string&gt; huffman_encoding(const string&amp; text) &#123;
+    unordered_map&lt;char, int&gt; freq_dict;
+    for (char ch : text) &#123;
+        freq_dict[ch]++;
+    &#125;
+    Node* root = build_huffman_tree(freq_dict);
+    unordered_map&lt;char, string&gt; code_dict;
+    get_huffman_code(root, code_dict);
+    return code_dict;
+&#125;
+
+// 测试
+int main() &#123;
+    string text = &quot;ABACADABRA&quot;;
+    auto code_dict = huffman_encoding(text);
+    for (const auto&amp; entry : code_dict) &#123;
+        cout &lt;&lt; entry.first &lt;&lt; &quot; &quot; &lt;&lt; entry.second &lt;&lt; endl;
+    &#125;
+    return 0;
+&#125;  
+  
+</code></pre>
+<hr>
+<h2 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定一个带权有向图G&#x3D;(V,E)，其中每条边的权是非负实数。另外，给定V中的一个顶点，称为源。现在计算从源到所有其他各顶点的最短路径长度。这里路的长度是指路上各边权之和。  </p>
+<h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>Dijkstra算法是解单源最短路径问题的一个贪心算法。其基本思想是，设置顶点集合S，并不断地做贪心选择来扩充这个集合。一个顶点属于集合S当且仅当从源到该顶点的最短路径已知。初始时，S中仅有源。设u时G的某一个顶点，把从源到u且中间只经过S中顶点的路径称为从源到u的特殊路径，并用数组记录当前每个顶点所对应的最短路特殊经长度。Dijkstra算法每次从V-S中取出具有最短特殊路长度的顶点u，将u添加到S中，同时对数组dist作必要的修改。一旦S包含了所有V中顶点，dist就记录了从源到所有其他顶点之间的最短路径长度。  </p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;queue&gt;
+
+using namespace std;
+
+struct edge
+&#123;
+    int end, weight;
+&#125;;
+
+struct result
+&#123;
+    int cost, peak;
+    friend bool operator&lt;(result a ,result b)
+    &#123;
+        return a.cost &lt; b.cost;
+    &#125;
+    result(int c, int p)
+    &#123;
+        cost = c;
+        peak = p;
+    &#125;
+&#125;;
+
+vector&lt;int&gt; dijkstra(vector&lt;vector&lt;edge&gt;&gt;&amp; G, int s)
+&#123;
+    int n = G.size();
+    vector&lt;int&gt;dist(n, INT_MAX);
+    vector&lt;bool&gt; visited(n, false);
+    priority_queue&lt;result&gt; pq;
+    dist[s] = 0;
+    result t(0, s);
+    pq.push(result(0, s));
+
+    while (!pq.empty())
+    &#123;
+        int u = pq.top().peak;
+        pq.pop();
+        if (visited[u])
+        &#123;
+            continue;
+        &#125;
+
+        visited[u] = true;
+
+        for(auto&amp; neighbor:G[u])
+            &#123;
+                int v = neighbor.end;
+                int weight = neighbor.weight;
+                if (dist[u] + weight &lt; dist[v])
+                &#123;
+                    dist[v] = dist[u] + weight;
+                    pq.push(result(dist[v], v));
+                &#125;
+            &#125;
+    &#125;
+    return dist;
+&#125;  
+  
+</code></pre>
+<hr>
+
+      
+
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
         </div>
-        <div class="clearfix"></div>
-    </header>
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="archive-article-date">
-  	<time datetime="2023-05-18T01:40:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-18</time>
-</a>
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">动态规划</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
+        
+        
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第四章.贪心算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8%E5%AE%89%E6%8E%92"><span class="toc-number">1.1.</span> <span class="toc-text">活动安排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E8%A3%85%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">最优装载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.</span> <span class="toc-text">哈夫曼编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="toc-number">1.4.</span> <span class="toc-text">单源最短路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
+            </div>
         </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
+        
+    </div>
+</aside>
+
+
+
   
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2023-05-14T12:17:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-14</time>
-</a>
-        </div>
-    	 
   
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/">递归与分治算法</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/11/unityAPI/" class="archive-article-date">
-  	<time datetime="2023-05-11T13:46:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-11</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/11/unityAPI/">unityAPI</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/" class="archive-article-date">
-  	<time datetime="2023-05-05T07:26:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-05</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/">No40组合总和II</a>
-    </h1>
   
 
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/" class="archive-article-date">
-  	<time datetime="2023-05-04T01:26:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-04</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/">No287寻找重复数</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/" class="archive-article-date">
-  	<time datetime="2023-05-03T13:49:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/">No463岛屿的周长</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/" class="archive-article-date">
-  	<time datetime="2023-05-03T12:54:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/">No200岛屿数量</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="archive-article-date">
-  	<time datetime="2023-05-03T10:13:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/">No74搜索二维矩阵</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2023/05/03/No658%E6%89%BE%E5%88%B0k%E4%B8%AA%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E5%85%83%E7%B4%A0/" class="archive-article-date">
-  	<time datetime="2023-05-03T04:11:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2023/05/03/No658%E6%89%BE%E5%88%B0k%E4%B8%AA%E6%9C%80%E6%8E%A5%E8%BF%91%E7%9A%84%E5%85%83%E7%B4%A0/">No658找到k个最接近的元素</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-  
-    </div></section>
-  
-
-    
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="extend next" rel="next" href="/archives/page/2/">Next &amp;raquo;</a>
-    </nav>
   
 
 
@@ -468,8 +599,8 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: false,
-		isArchive: true,
+		isPost: true,
+		isArchive: false,
 		isTag: false,
 		isCategory: false,
 		open_in_new: false,
