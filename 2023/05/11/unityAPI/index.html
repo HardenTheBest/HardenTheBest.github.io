@@ -181,12 +181,11 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="Unity常见API"><a href="#Unity常见API" class="headerlink" title="Unity常见API"></a>Unity常见API</h1><span id="more"></span>  
-
 <h2 id="玩家输入"><a href="#玩家输入" class="headerlink" title="玩家输入"></a>玩家输入</h2><h3 id="鼠标检测"><a href="#鼠标检测" class="headerlink" title="鼠标检测"></a>鼠标检测</h3><p>GetMouseButtonDown()<br>GetMouseButtonUp()<br>GetMouseButton()<br>参数:<br>0:左键<br>1:右键<br>2:中键  </p>
 <h3 id="键盘检测"><a href="#键盘检测" class="headerlink" title="键盘检测"></a>键盘检测</h3><p>使用配置的参数<br>Input.GetButton():按下对应按钮就会一直执行<br>Input.GetButtonDown():按下的瞬间执行<br>Input.GetButtonUp():抬起的瞬间执行<br>括号内参数可在Input Manager中进行设置  </p>
 <h3 id="使用枚举"><a href="#使用枚举" class="headerlink" title="使用枚举"></a>使用枚举</h3><p>Input.GetKey()<br>Input.GetKeyDown()<br>Input.GetKeyUp()<br>括号内参数:<br>KeyCode.目标按键  </p>
 <h3 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h3><p>1.Input相关的方法通常都会在Update函数中进行使用<br>2.Down和Up都只会执行一帧，因此如果想要实现类似于按住某个按键，就执行人物移动的逻辑，需要将其写在不带Down或者Up的方法中<br>3.3.使用KeyCode进行检测时，只需打出KeyCode后，然后引用对于按键即可  </p>
-<h2 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h2><h3 id="Time-deltaTime-上一帧到当前帧的时间间隔"><a href="#Time-deltaTime-上一帧到当前帧的时间间隔" class="headerlink" title="Time.deltaTime 上一帧到当前帧的时间间隔"></a>Time.deltaTime 上一帧到当前帧的时间间隔</h3><p>一秒执行Update()60次，deltaTime即为1&#x2F;60<br>一秒执行Update()120次，deltaTime即为1&#x2F;120<br>补充：<br>1.应用一：使用每帧时间累加，来进行游戏计数<br>2.应用二：让运动的物体，在相同的时间内保持平均的速度进行运动（引入增量时间；将某数值乘以Time.deltaTime后，可使得此内容在Update中执行时，无论游戏的帧率是多少，结果依然在分布上与时间有关）  </p>
+<h2 id="时间"><a href="#时间" class="headerlink" title="时间"></a>时间</h2><h3 id="Time-deltaTime-上一帧到当前帧的时间间隔"><a href="#Time-deltaTime-上一帧到当前帧的时间间隔" class="headerlink" title="Time.deltaTime 上一帧到当前帧的时间间隔"></a>Time.deltaTime 上一帧到当前帧的时间间隔</h3><p>一秒执行Update()60次，deltaTime即为1/60<br>一秒执行Update()120次，deltaTime即为1/120<br>补充：<br>1.应用一：使用每帧时间累加，来进行游戏计数<br>2.应用二：让运动的物体，在相同的时间内保持平均的速度进行运动（引入增量时间；将某数值乘以Time.deltaTime后，可使得此内容在Update中执行时，无论游戏的帧率是多少，结果依然在分布上与时间有关）  </p>
 <h3 id="Time-time-表示游戏自启动以来的时间"><a href="#Time-time-表示游戏自启动以来的时间" class="headerlink" title="Time.time 表示游戏自启动以来的时间"></a>Time.time 表示游戏自启动以来的时间</h3><p>补充：<br>1.其用于表达应用程序的已经运行时间长度，因此和每帧时间无关  </p>
 <h3 id="Time-timeScale-时间缩放"><a href="#Time-timeScale-时间缩放" class="headerlink" title="Time.timeScale 时间缩放"></a>Time.timeScale 时间缩放</h3><p>补充：<br>1.默认为1，数值小于，表示时间减慢，时间大于1表示时间加快<br>2.用来制作加速和减速游戏效果  </p>
 <h2 id="玩家控制"><a href="#玩家控制" class="headerlink" title="玩家控制"></a>玩家控制</h2><p>特点：更容易的处理有有碰撞的运动，同时不用处理刚体，是针对第一人称和第三人称游戏封装的组件  </p>
@@ -197,33 +196,30 @@ public float PlayerMoveSpeed;
 float move_x = Input.GetAxis(&quot;Horizontal&quot;);
 float move_y = Input.GetAxis(&quot;Vertical&quot;);
 Vector3 move_direct = transform.right * move_x + transform.forward * move_y;
-controller.Move(move_direct * PlayerMoveSpeed * Time.deltaTime);  
-</code></pre>
-<p>补充：<br>1.加了CharacterController后，其物体就会连带一个Capsule Collider，因此之前的碰撞盒子可以取消<br>2.加了CharacterController后，代表此物体的行为想受到代码来驱动，不会受到场景重力影响，因此不要把Rigidbody刚体和CharacterController一起使用。（因为加了Rigidbody就表示此物体的运动会受到物理系统的影响<br>3.3.如果想把Rigidbody加载带有CharacterController的物体上，记得在检测视图里面开启刚体的IsKinematic  </p>
+controller.Move(move_direct * PlayerMoveSpeed * Time.deltaTime);
+</code></pre><p>补充：<br>1.加了CharacterController后，其物体就会连带一个Capsule Collider，因此之前的碰撞盒子可以取消<br>2.加了CharacterController后，代表此物体的行为想受到代码来驱动，不会受到场景重力影响，因此不要把Rigidbody刚体和CharacterController一起使用。（因为加了Rigidbody就表示此物体的运动会受到物理系统的影响<br>3.3.如果想把Rigidbody加载带有CharacterController的物体上，记得在检测视图里面开启刚体的IsKinematic  </p>
 <h2 id="物理"><a href="#物理" class="headerlink" title="物理"></a>物理</h2><h3 id="Rigidbody"><a href="#Rigidbody" class="headerlink" title="Rigidbody"></a>Rigidbody</h3><p>当游戏对象添加了Rigidbody组件后，即可具备物理相关属性<br>该组件可以给物体添加一些物理属性，比如物体的质量，摩擦力、是否受重力控制等等  </p>
-<p>补充：<br>1.在脚本中建议使用 FixedUpdate 函数来施加力和以及更改Rigidbody的相关设置  </p>
+<p>补充：<br>1.在脚本中建议使用 FixedUpdate 函数来施加力和以及更改Rigidbody的相关设置  </p>
 <p>方法：Physics.CheckSphere（检测位置，检测半径，检测layer）<br>用于检测是否和某Layer的物体相交  </p>
 <p>方法：AddForce(Vector3 Force，ForceMode mode)<br>给刚体添加一个力<br>参数一：力的方向以及大小<br>参数二：力的模式<br>ForceMode.Force：添加一个受到质量影响的持续力<br>ForceMode.Acceleration：添加一个持续的加速度并且忽略其质量<br>ForceMode.Impulse：添加一个瞬间的力并使用其质量<br>ForceMode.VelocityChange：添加一个忽略其质量的瞬间的加速度<br>补充：<br>什么时候使用瞬间力的模式？<br>当与此力效果有关的代码是只执行于一帧的时候，可以使用瞬间力模式  </p>
 <pre><code>if (Input.GetKeyDown(KeyCode.Q)) 
-    &#123; rb.AddForce(Vector3.forward * force,ForceMode.VelocityChange); &#125;  
-</code></pre>
-<p>当与此力效果有关的代码是会每一帧执行的时候，可以使用持续力的模式  </p>
+    &#123; rb.AddForce(Vector3.forward * force,ForceMode.VelocityChange); &#125;
+</code></pre><p>当与此力效果有关的代码是会每一帧执行的时候，可以使用持续力的模式  </p>
 <pre><code>if (Input.GetButton(KeyCode.Q)) 
-    &#123; rb.AddForce(Vector3.forward* force); &#125;  
-</code></pre>
-<p>AddForce的重载：<br>AddForce(float x, float y, float z，ForceMode mode)<br>给物体在不同轴（XYZ）上分别添加力<br>参数一：沿世界 X 轴的力大小<br>参数二：沿世界 Y 轴的力大小<br>参数三：沿世界 Z 轴的力大小<br>参数四：同上面的AddForce<br>补充：<br>1.涉及力以及刚体相关的方法，最好在FixedUpdate当中使用，而非Update（即让物理的模拟以离散的方式来执行）<br>2.AddForce中的Vector3 Force为世界坐标系下的力矢量<br>3.使用AddForce等相关力的函数时，刚体不能开启IsKinematic  </p>
+    &#123; rb.AddForce(Vector3.forward* force); &#125;
+</code></pre><p>AddForce的重载：<br>AddForce(float x, float y, float z，ForceMode mode)<br>给物体在不同轴（XYZ）上分别添加力<br>参数一：沿世界 X 轴的力大小<br>参数二：沿世界 Y 轴的力大小<br>参数三：沿世界 Z 轴的力大小<br>参数四：同上面的AddForce<br>补充：<br>1.涉及力以及刚体相关的方法，最好在FixedUpdate当中使用，而非Update（即让物理的模拟以离散的方式来执行）<br>2.AddForce中的Vector3 Force为世界坐标系下的力矢量<br>3.使用AddForce等相关力的函数时，刚体不能开启IsKinematic  </p>
 <h2 id="旋转"><a href="#旋转" class="headerlink" title="旋转"></a>旋转</h2><p>方法：<br>transform.Rotate(xAngle, yAngle, zAngle, Space.Self或者Space.World)<br>欧拉角旋转指定角度<br>参数一：围绕 X 轴旋转游戏对象的度数<br>参数二：围绕 Y 轴旋转游戏对象的度数<br>参数三：围绕 Z 轴旋转游戏对象的度数<br>参数四：此旋转是依照世界坐标系还是依照局部坐标系。Self为局部坐标系，World为世界坐标系<br>补充：<br>1.世界坐标系就是此物体在当前场景内的世界位置与角度（即与其和父物体的位置关系无关），而局部坐标系就是子物体相对与其父物体的相对位置与角度（因此当物体想要进行旋转时，若其旋转模式为Self，则其每次的旋转都是相对于其自身的角度）  </p>
-<p>方法：<br>Quaternion.Euler（传入一个Vector3）<br>实现将Vector3类型的数据转为四元数类型<br>补充：<br>1.当你想要改变游戏物体Transform中的rotation的数值时，你不能直接将一个Vector3类型的数据赋给它，而是得使用四元数，比如这样：transform.rotation &#x3D; Quaternion.Euler(45, 45, 45);  </p>
+<p>方法：<br>Quaternion.Euler（传入一个Vector3）<br>实现将Vector3类型的数据转为四元数类型<br>补充：<br>1.当你想要改变游戏物体Transform中的rotation的数值时，你不能直接将一个Vector3类型的数据赋给它，而是得使用四元数，比如这样：transform.rotation = Quaternion.Euler(45, 45, 45);  </p>
 <p>方法：<br>transform.LookAt(obj.transform)<br>让当前的物体始终面向obj的位置<br>参数：将要朝向的obj物体其此时的位置  </p>
 <p>方法：<br>Vector3.Angle(from,to)<br>返回计算出的from和to两个向量所交角度大小  </p>
-<h2 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h2><p>方法：<br>transform.Translate(float x, float y, float z，Space.Self或者Space.World)<br>改变物体XYZ的位置<br>参数一：物体在 X 轴上移动的距离<br>参数二：物体在 Y 轴上移动的距离<br>参数三：物体在 Z 轴上移动的距离<br>参数四：此旋转是依照世界坐标系还是依照局部坐标系。Self为局部坐标系，World为世界坐标系<br>补充：<br>1.尽量不要和刚体力的效果或者角色控制器的Move一起叠加移动，会发生不规则的运动<br>2.如果 参数四被省略或设置为 Space.Self，则此物体的移动会相对于当前子物体的父物体位置来应用该移动<br>举例:<br>讲当前物体按照其世界坐标位置，每秒在Y轴上移动一个单位<br>transform.Translate(0, Time.deltaTime, 0, Space.World);  </p>
+<h2 id="位置"><a href="#位置" class="headerlink" title="位置"></a>位置</h2><p>方法：<br>transform.Translate(float x, float y, float z，Space.Self或者Space.World)<br>改变物体XYZ的位置<br>参数一：物体在 X 轴上移动的距离<br>参数二：物体在 Y 轴上移动的距离<br>参数三：物体在 Z 轴上移动的距离<br>参数四：此旋转是依照世界坐标系还是依照局部坐标系。Self为局部坐标系，World为世界坐标系<br>补充：<br>1.尽量不要和刚体力的效果或者角色控制器的Move一起叠加移动，会发生不规则的运动<br>2.如果 参数四被省略或设置为 Space.Self，则此物体的移动会相对于当前子物体的父物体位置来应用该移动<br>举例:<br>讲当前物体按照其世界坐标位置，每秒在Y轴上移动一个单位<br>transform.Translate(0, Time.deltaTime, 0, Space.World);  </p>
 <p>方法：<br>Vector3.Distance（点1，点2）<br>计算两点之间距离  </p>
 <h2 id="数学"><a href="#数学" class="headerlink" title="数学"></a>数学</h2><p>方法：<br>Random.Range(min,max)<br>在最小值和最大值范围内生成一个随机数  </p>
 <p>方法：<br>Mathf.Sin(一个float类型的角度值)<br>根据传入的角度大小，计算其Sin值，然后返回一个-1到+1之间的float<br>同理类似Mathf.Cos,Mathf.Tan  </p>
-<p>方法：<br>Mathf.Lerp(起点值，终点值，两个浮点数之间的插值)<br>在起点值与终点值 之间按一定比例进行线性插值<br>参数一：插值结果的最小值<br>参数二：插值结果的最大值<br>参数三：插值的比例，数值范围在0~1<br>补充：<br>1.数值为0时，返回的结果为最小值。数值为1时，返回的结果为最大值。数值为0.5时，返回的结果为两者的中间值。<br>2.如果不改变参数三的数值，一直重复此方法来进行位置的移动，其结果会无限逼近终点值，而不是按照线性变换到达终点值：transform.position &#x3D; Vector3.Lerp(transform.position, targetPosition, 0.3f)  </p>
+<p>方法：<br>Mathf.Lerp(起点值，终点值，两个浮点数之间的插值)<br>在起点值与终点值 之间按一定比例进行线性插值<br>参数一：插值结果的最小值<br>参数二：插值结果的最大值<br>参数三：插值的比例，数值范围在0~1<br>补充：<br>1.数值为0时，返回的结果为最小值。数值为1时，返回的结果为最大值。数值为0.5时，返回的结果为两者的中间值。<br>2.如果不改变参数三的数值，一直重复此方法来进行位置的移动，其结果会无限逼近终点值，而不是按照线性变换到达终点值：transform.position = Vector3.Lerp(transform.position, targetPosition, 0.3f)  </p>
 <p>方法：<br>Mathf.Max（float a,float b）<br>返回a,b两个值中的最大值<br>Mathf.Min（float a,float b）<br>返回a,b两个值中的最小值  </p>
 <h2 id="物体相关"><a href="#物体相关" class="headerlink" title="物体相关"></a>物体相关</h2><p>方法：<br>Instantiate（目标生成物体，生成位置，生成角度）<br>生成目标物体到目标的位置与角度<br>补充：<br>1.使用Instantiate克隆出的物体其属性和原物体全部一致，除了其位置与角度（因为你自己设置了）<br>2.当前类不继承自MonoBehaviour时，需要写GameObject.Instantiate()来进行实例化对象  </p>
-<p>方法：<br>Resources.Load(物体名称及其路径)<br>从本地加载物体<br>补充：<br>1.用Resources加载的资源，只能位于命名为Assets&#x2F;Resources文件夹下。如果要使用这种方式进行加载，必须需要先创建Resources文件夹，然后将资源放置于该文件夹下<br>2.Resources.Load当中传入路径，用 &#x2F; 来表示子文件夹<br>3.游戏打包导出时，Resources目录下的文件，不论是否在游戏使用，都会被打包到游戏包中增加游戏体积，因此应该尽量控制Resources目录下的文件数量<br>4.Resources加载资源的相关代码最好在打开场景时进行加载<br>5.Resources加载资源的方式是只读的，在游戏打包后就无法对文件夹的内容进行修改  </p>
+<p>方法：<br>Resources.Load(物体名称及其路径)<br>从本地加载物体<br>补充：<br>1.用Resources加载的资源，只能位于命名为Assets/Resources文件夹下。如果要使用这种方式进行加载，必须需要先创建Resources文件夹，然后将资源放置于该文件夹下<br>2.Resources.Load当中传入路径，用 / 来表示子文件夹<br>3.游戏打包导出时，Resources目录下的文件，不论是否在游戏使用，都会被打包到游戏包中增加游戏体积，因此应该尽量控制Resources目录下的文件数量<br>4.Resources加载资源的相关代码最好在打开场景时进行加载<br>5.Resources加载资源的方式是只读的，在游戏打包后就无法对文件夹的内容进行修改  </p>
 <p>方法：<br>GetComponent<T>()<br>获得某个物体上的组件<br>举例：<br>从敌人物体身上获得Enemy代码，并且完成扣血  </p>
 <pre><code>void OnTriggerStay(Collider other)
 &#123;
@@ -234,9 +230,8 @@ controller.Move(move_direct * PlayerMoveSpeed * Time.deltaTime);
             other.gameObject.GetComponent&lt;Enemy&gt;().HP -= PlayerAttackNumber;
         &#125;
     &#125;
-&#125;  
-</code></pre>
-<p>补充：<br>1.GetComponent以及GameObject.Find此类的代码最好不要每帧调用，消耗性能，应该先获得一次，将其保存为变量，然后作为缓存来使用<br>2.如果不确定想获得的组件是否在此物体上存在，可以使用TryGetComponent来获得组件。当请求的Component不存在时，其不会在编辑器中分配内存，可以减小性能消耗  </p>
+&#125;
+</code></pre><p>补充：<br>1.GetComponent以及GameObject.Find此类的代码最好不要每帧调用，消耗性能，应该先获得一次，将其保存为变量，然后作为缓存来使用<br>2.如果不确定想获得的组件是否在此物体上存在，可以使用TryGetComponent来获得组件。当请求的Component不存在时，其不会在编辑器中分配内存，可以减小性能消耗  </p>
 <p>方法：<br>GetComponentsInChildren<T>()<br>获得此游戏对象及其所有子物体上的对应T组件<br>补充：<br>1.常和foreach一起使用，用于寻找子物体中某目标组件  </p>
 <p>方法：<br>AddComponent<T>()<br>为此游戏对象加上对应的组件T  </p>
 <p>方法：<br>SetActive(bool active)<br>通过括号内参数来控制游戏物体激活状态。可以通过设置active为false,来取消此物体在场景内的激活状态<br>补充：<br>1.使用SetActive会导致内存分配，触发垃圾回收，造成较大的性能消耗<br>2.如果一开始就直接禁用的话，会导致无法加载此界面上得到组件和代码<br>3.关掉的物体，其身上的代码也不执行<br>4.UI类物体的隐藏，可以通过将其移到摄像机屏幕外的方式来进行(更高级一点可以通过设置相机的CullingMask来不进行绘制物体)  </p>
@@ -257,9 +252,8 @@ foreach (RaycastHit hit in raycastHits)
     &#123;
         Debug.Log(hit.collider.name);
     &#125;
-&#125;  
-</code></pre>
-<h2 id="导航网格"><a href="#导航网格" class="headerlink" title="导航网格"></a>导航网格</h2><p>组件：<br>NavMeshAgent<br>补充：<br>1.需要先using UnityEngine.AI  </p>
+&#125;
+</code></pre><h2 id="导航网格"><a href="#导航网格" class="headerlink" title="导航网格"></a>导航网格</h2><p>组件：<br>NavMeshAgent<br>补充：<br>1.需要先using UnityEngine.AI  </p>
 <p>方法：<br>SetDestination(目标点)<br>将带有NavMeshAgent的物体，往目标点进行移动<br>补充：<br>1.常和Vector3.Distance（）一起结合使用，判断是否到达目标点<br>2.计算出路径后，路径可能在几帧之后才可用  </p>
 <p>举例：  </p>
 <pre><code>public NavMeshAgent navMeshAgent;
@@ -272,24 +266,23 @@ if (IsMove == true)
     &#123;
         Debug.Log(“到达！”)；
     &#125;
-&#125;  
-</code></pre>
-<p>方法：<br>ResetPath()<br>清除当前路径。路径在被清除之后，在使用SetDestination 之前不会开始新的路径  </p>
+&#125;
+</code></pre><p>方法：<br>ResetPath()<br>清除当前路径。路径在被清除之后，在使用SetDestination 之前不会开始新的路径  </p>
 <h2 id="场景相关"><a href="#场景相关" class="headerlink" title="场景相关"></a>场景相关</h2><p>方法：<br>SceneManager.LoadScene(要切换的场景的名称)<br>进行场景切换<br>补充：<br>1.使用前需要先using UnityEngine.SceneManagement;<br>2.要加载的场景需要先Add到Build Setting列表里面  </p>
 <p>方法：<br>DontDestroyOnLoad(对象目标)<br>传入参数的物体，在场景切换的时候不会被摧毁掉<br>补充：<br>1.注意重复生成。因为当游戏加载了一个新场景的时候，会加载场景里面的全部物体。而如果有物体在之前因为设置了DontDestroyOnLoad导致其未被删除，当你再加载进此场景的时候，会再生成一个此物体。可以判断下场景中是否有此物体，在场景加载时将其摧毁  </p>
 <h2 id="动画相关"><a href="#动画相关" class="headerlink" title="动画相关"></a>动画相关</h2><p>动画组件：Animator  </p>
 <p>方法：<br>设置参数内容：<br>animator.SetFloat(参数名称，参数目标数值);设置浮点参数<br>animator.SetBool(参数名称，参数目标数值);设置布尔参数<br>animator.SetInteger(参数名称，参数目标数值);设置整形参数<br>animator.SetTrigger(Trigger的参数名称);触发Trigger  </p>
-<p>方法：<br>Animator.GetCurrentAnimatorStateInfo(要检测的动画所处的动画层layer)<br>用于获得当前动画信息<br>返回AnimatorStateInfo类型的变量，存储了动画的状态<br>举例：<br>检测当前是否在播放“Run”动画<br>AnimatorStateInfo info &#x3D; animator.GetCurrentAnimatorStateInfo(2);<br>bool isPlay &#x3D; info.IsName(“Run”);如果当前在播放Run动画，则返回真，反之为假  </p>
+<p>方法：<br>Animator.GetCurrentAnimatorStateInfo(要检测的动画所处的动画层layer)<br>用于获得当前动画信息<br>返回AnimatorStateInfo类型的变量，存储了动画的状态<br>举例：<br>检测当前是否在播放“Run”动画<br>AnimatorStateInfo info = animator.GetCurrentAnimatorStateInfo(2);<br>bool isPlay = info.IsName(“Run”);如果当前在播放Run动画，则返回真，反之为假  </p>
 <p>动画组件：Animation<br>老版本动画播放接口<br>方法：<br>animation.Play(对应动画名字)<br>直接在参数中输入动画的名称（string类型）即可进行播放  </p>
 <p>方法：<br>animation.Stop()<br>暂停所有此Animation的动画播放  </p>
 <h2 id="Debug相关"><a href="#Debug相关" class="headerlink" title="Debug相关"></a>Debug相关</h2><p>控制台<br>方法：<br>Debug.Log(想输出到控制台的信息)<br>传入参数，将信息打印到控制台，从而调试应用程序的消息，文字颜色为白色  </p>
 <p>Debug.LogWarning(想输出到控制台的信息)<br>和Debug.Log类似，但是打印出来的为警告信息，所以其文字为黄色  </p>
 <p>Debug.LogError(想输出到控制台的信息)<br>和前两者差不多，但是打印出的为红色，一般表示程序报错信息  </p>
-<p>图像绘制<br>Debug.DrawLine(Vector3 start, Vector3 end, Color color&#x3D; Color.white, float duration&#x3D; 0.0f)<br>在3D场景里面，绘制一条直线<br>参数一：直线起始点<br>参数二：直线结束点<br>参数三：直线颜色<br>参数四：直线可被看见时长  </p>
+<p>图像绘制<br>Debug.DrawLine(Vector3 start, Vector3 end, Color color= Color.white, float duration= 0.0f)<br>在3D场景里面，绘制一条直线<br>参数一：直线起始点<br>参数二：直线结束点<br>参数三：直线颜色<br>参数四：直线可被看见时长  </p>
 <h2 id="游戏音效"><a href="#游戏音效" class="headerlink" title="游戏音效"></a>游戏音效</h2><p>游戏的UI界面相关的组件代码<br>组件名：AudioSource  </p>
 <p>方法：<br>audioSource.Play()<br>播放此AudioSource对应的音频Clip片段<br>audioSource.Stop()<br>停止播放此AudioSource对应的音频Clip片段<br>audioSource.Pause()<br>暂停播放此AudioSource对应的音频Clip片段  </p>
 <p>方法：<br>audioSource.PlayClipAtPoint(AudioClip clip,transform.position)<br>在某一位置点播放Clip音频<br>参数一：对应的音频片段<br>参数二：此Clip计划播放的位置点  </p>
-<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>方法：<br>Application .Quit()<br>退出当前游戏的运行  </p>
+<h2 id="其他"><a href="#其他" class="headerlink" title="其他"></a>其他</h2><p>方法：<br>Application .Quit()<br>退出当前游戏的运行  </p>
 <p>方法：<br>Vector3.Normalize（Vector3 value）<br>将目标vector3向量的数据标准化，变成长度为1的向量<br>补充：<br>进行了标准化之后，其向量的方向不变，长度变为1  </p>
 
       
@@ -687,5 +680,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

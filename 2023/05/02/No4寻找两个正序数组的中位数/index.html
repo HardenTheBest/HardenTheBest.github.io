@@ -181,10 +181,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第四题-寻找两个正序数组的中位数"><a href="#第四题-寻找两个正序数组的中位数" class="headerlink" title="第四题.寻找两个正序数组的中位数"></a>第四题.寻找两个正序数组的中位数</h1><span id="more"></span>
-
-<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。算法的时间复杂度应该为 O(log (m+n)) 。  </p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定两个大小分别为 m 和 n 的正序（从小到大）数组 nums1 和 nums2。请你找出并返回这两个正序数组的 中位数 。算法的时间复杂度应该为 O(log (m+n)) 。  </p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/median-of-two-sorted-arrays/">https://leetcode.cn/problems/median-of-two-sorted-arrays/</a>)  </p>
-<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>最简单的就是将两个数组合并之后排序，但题目要求算法的时间复杂度应该为O(log(m+n))。所以，该方法并达不到要求（提交可以成功）。根据该时间复杂度要求，我们应该使用二分查找方法。当m+n为奇数时，他们的中位数就是他们的第(m+n+1)&#x2F;2个元素，当m+n为偶数时，他们的中位数就是第(m+n)&#x2F;2和第(m+n)&#x2F;2+1个元素的平均数，因此，该题可以转换为用二分法寻找第(m+n)&#x2F;2或第(m+n)&#x2F;2-1个元素。令k&#x3D;(m+n)&#x2F;2，假设由A，B两个数组，则判断A[k&#x2F;2-1]和B[k&#x2F;2-1]的大小，如果A[k&#x2F;2-1]&lt;&#x3D;B[k&#x2F;2-1]，那么可以排除A[0] ~ A[k&#x2F;2-1]的元素，如果a[k&#x2F;2-1]&gt;B[k&#x2F;2-1]，那么可以排除B[0] ~ B[k&#x2F;2-1]的元素，这样我们就把寻找范围缩小一半，同时在排除后的数组中继续寻找，并且改变k值。当然要考虑数组越界，数组本来为空或者元素个数为1的特殊情况。  </p>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>最简单的就是将两个数组合并之后排序，但题目要求算法的时间复杂度应该为O(log(m+n))。所以，该方法并达不到要求（提交可以成功）。根据该时间复杂度要求，我们应该使用二分查找方法。当m+n为奇数时，他们的中位数就是他们的第(m+n+1)/2个元素，当m+n为偶数时，他们的中位数就是第(m+n)/2和第(m+n)/2+1个元素的平均数，因此，该题可以转换为用二分法寻找第(m+n)/2或第(m+n)/2-1个元素。令k=(m+n)/2，假设由A，B两个数组，则判断A[k/2-1]和B[k/2-1]的大小，如果A[k/2-1]&lt;=B[k/2-1]，那么可以排除A[0] ~ A[k/2-1]的元素，如果a[k/2-1]&gt;B[k/2-1]，那么可以排除B[0] ~ B[k/2-1]的元素，这样我们就把寻找范围缩小一半，同时在排除后的数组中继续寻找，并且改变k值。当然要考虑数组越界，数组本来为空或者元素个数为1的特殊情况。  </p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 
@@ -239,9 +238,8 @@ int main() &#123;
     vector&lt;int&gt; nums1&#123; 100001 &#125;;
     vector&lt;int&gt; nums2&#123; 100000 &#125;;
     cout &lt;&lt; findMedianSortedArrays(nums1, nums2) &lt;&lt; endl;
-&#125;  
-</code></pre>
-<h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2><p>用最简单的方法时，在越界问题的考虑没有很仔细，导致解决过程一路不畅；用二分查找方法时，思路不是特别明朗，在看题解之后才懂得。</p>
+&#125;
+</code></pre><h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2><p>用最简单的方法时，在越界问题的考虑没有很仔细，导致解决过程一路不畅；用二分查找方法时，思路不是特别明朗，在看题解之后才懂得。</p>
 
       
 
@@ -638,5 +636,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

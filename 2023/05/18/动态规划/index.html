@@ -181,8 +181,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第三章-动态规划"><a href="#第三章-动态规划" class="headerlink" title="第三章.动态规划"></a>第三章.动态规划</h1><span id="more"></span>  
-<h2 id="最长公共子序列"><a href="#最长公共子序列" class="headerlink" title="最长公共子序列"></a>最长公共子序列</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定两个字符串 text1和text2，返回这两个字符串的最长公共子序列的长度。如果不存在公共子序列，返回 0 。一个字符串的子序列是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。两个字符串的公共子序列是这两个字符串所共同拥有的子序列。  </p>
-<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>该题是典型的二维动态规划问题。假设字符串text1和text2的长度分别位m和n，创建m+1行n+1列的二维数组dp，其中dp[i][j]表示text1[0:i]和text2[0:j]的最长公共子序列。那么动态规划的边界条件就是当i或j为0时，dp[i][j]为0，而当i和j都不为0时，dp[i][j]分两种情况，一是当text1[i-1]&#x3D;text2[j]时，dp[i][j]&#x3D;dp[i-1][j-1]+1；而另一种情况就是当text1[i-1]!&#x3D;text2[j-1]时，dp[i][j]&#x3D;max(dp[i-1][j],dp[i][j-1])。最终dp[m][n]即是text1和text2的最长公共子序列。  </p>
+<h2 id="最长公共子序列"><a href="#最长公共子序列" class="headerlink" title="最长公共子序列"></a>最长公共子序列</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>给定两个字符串 text1和text2，返回这两个字符串的最长公共子序列的长度。如果不存在公共子序列，返回 0 。一个字符串的子序列是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。两个字符串的公共子序列是这两个字符串所共同拥有的子序列。  </p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>该题是典型的二维动态规划问题。假设字符串text1和text2的长度分别位m和n，创建m+1行n+1列的二维数组dp，其中dp[i][j]表示text1[0:i]和text2[0:j]的最长公共子序列。那么动态规划的边界条件就是当i或j为0时，dp[i][j]为0，而当i和j都不为0时，dp[i][j]分两种情况，一是当text1[i-1]=text2[j]时，dp[i][j]=dp[i-1][j-1]+1；而另一种情况就是当text1[i-1]!=text2[j-1]时，dp[i][j]=max(dp[i-1][j],dp[i][j-1])。最终dp[m][n]即是text1和text2的最长公共子序列。  </p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;string&gt;
@@ -211,13 +211,11 @@ int longestCommonSubsequence(string text1, string text2) &#123;
 int main() &#123;
     string text1 = &quot;abcde&quot;, text2 = &quot;ace&quot;;
     cout &lt;&lt; longestCommonSubsequence(text1, text2) &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="最大字段和"><a href="#最大字段和" class="headerlink" title="最大字段和"></a>最大字段和</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>给定有n个整数（可能为负整数）组成的序列a1,a2,…,an，求该序列的连续字段和的最大值。当所有整数均为负数时定义其最大字段和为0。  </p>
-<h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>利用动态规划算法，定义一个一维数组dp(n)，n为数组的大小；dp[i]表示包含nums[i]的最大字段和的大小，所以dp[i]&#x3D;max(dp[i-1]+nums[i],nums[i])，我们可以定义一个变量maxSum来记录最大值,最后判断maxSum即可，当maxSum为负数时，说明数组nums中的元素均为负数，所以返回0，否则返回maxSum。  </p>
-<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>利用动态规划算法，定义一个一维数组dp(n)，n为数组的大小；dp[i]表示包含nums[i]的最大字段和的大小，所以dp[i]=max(dp[i-1]+nums[i],nums[i])，我们可以定义一个变量maxSum来记录最大值,最后判断maxSum即可，当maxSum为负数时，说明数组nums中的元素均为负数，所以返回0，否则返回maxSum。  </p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
 
@@ -240,13 +238,11 @@ int main()
 &#123;
     vector&lt;int&gt; nums&#123; -2,1,-3,4,-1,2,1,-5,4 &#125;;
     cout &lt;&lt; maxSubArray(nums) &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="01背包问题"><a href="#01背包问题" class="headerlink" title="01背包问题"></a>01背包问题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>给定n种物品和一背包。物体i的重量是wi，其价值为vi，背包的容量为c。问应如何选择转入背包中的物品，使得装入背包中物品的总价值最大。  </p>
-<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>该题是典型的动态规划问题。定义集合dp，dp[i][j] 表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少。从dp[i][j]的定义出发，如果背包容量j为0的话，即dp[i][0]，无论是选取哪些物品，背包价值总和一定为0。当容量j不足以再将物品i加入时，dp[i][j]&#x3D;dp[i-1][j];当将物品i加入时，dp[i][j]&#x3D;dp[i-1][j-wi]+v[i]。所以dp[i][j]&#x3D;max(dp[i-1][j],dp[i-1][j-w1]+v[i])。最后返回dp[m-1][n]，m为物品种类，n为背包容量。  </p>
-<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>该题是典型的动态规划问题。定义集合dp，dp[i][j] 表示从下标为[0-i]的物品里任意取，放进容量为j的背包，价值总和最大是多少。从dp[i][j]的定义出发，如果背包容量j为0的话，即dp[i][0]，无论是选取哪些物品，背包价值总和一定为0。当容量j不足以再将物品i加入时，dp[i][j]=dp[i-1][j];当将物品i加入时，dp[i][j]=dp[i-1][j-wi]+v[i]。所以dp[i][j]=max(dp[i-1][j],dp[i-1][j-w1]+v[i])。最后返回dp[m-1][n]，m为物品种类，n为背包容量。  </p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
 
@@ -277,12 +273,10 @@ int main()
     vector&lt;int&gt; values&#123; 15,20,30 &#125;;
     int capacity = 4;
     cout &lt;&lt; maxBagValue(weights, values, capacity) &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="矩阵连乘问题"><a href="#矩阵连乘问题" class="headerlink" title="矩阵连乘问题"></a>矩阵连乘问题</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定n个矩阵{A1,A2,…,An}，其中Ai与Ai+1时可连乘的。由于矩阵乘法满足结合律，因此计算矩阵的连乘积可以有不同的计算次序。这种计算次序可以用加括号的方式来确定。求找到一种计算次数最少的方式。  </p>
-<h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>A[i:j]表示矩阵Ai…Aj的连乘，计算A[1:n]的最优计算次序，即先计算A[1:k]和A[k+1:n]，再将计算结果相乘，得到A[1:n]。依次计算顺序，总计算量为A[1:k]的计算量加上A[k+1:n]的计算量，再加上A[i:k]和A[k+1:n]相乘的计算量。设计算A[i:j]（1&lt;&#x3D;i&lt;&#x3D;j&lt;&#x3D;n），所需的最少书城次数为m[i][j]，则原问题的最优解为m[1][n]；当i&#x3D;&#x3D;j，m[i][j]&#x3D;0；当i &lt; j，m[i][j]&#x3D;m[i][k]+m[k+1][j]+$p_{i-1}$ $p_k$ $p_{j}$ 。  </p>
+<h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>A[i:j]表示矩阵Ai…Aj的连乘，计算A[1:n]的最优计算次序，即先计算A[1:k]和A[k+1:n]，再将计算结果相乘，得到A[1:n]。依次计算顺序，总计算量为A[1:k]的计算量加上A[k+1:n]的计算量，再加上A[i:k]和A[k+1:n]相乘的计算量。设计算A[i:j]（1&lt;=i&lt;=j&lt;=n），所需的最少书城次数为m[i][j]，则原问题的最优解为m[1][n]；当i==j，m[i][j]=0；当i &lt; j，m[i][j]=m[i][k]+m[k+1][j]+$p_{i-1}$ $p_k$ $p_{j}$ 。  </p>
 <h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
@@ -334,12 +328,11 @@ int main()
     cout &lt;&lt; m[1][p.size() - 1] &lt;&lt; endl;
     TrackBack(1, p.size() - 1, s);
     cout &lt;&lt; endl;
-&#125;  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="最优二叉搜索树"><a href="#最优二叉搜索树" class="headerlink" title="最优二叉搜索树"></a>最优二叉搜索树</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>给定一些节点出现的频率，构建一棵具有最小搜索代价的二叉搜索树。  </p>
-<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>最优二叉搜索树（Optimal Binary Search Tree）是一种基于动态规划的问题。我们可以定义一个二维数组 cost[i][j]，其中 cost[i][j] 表示包含节点 i 到 j 的子树的最小搜索代价。定义一个一个二维数组 root[i][j]，其中 root[i][j] 存储节点 i 到 j 子树的根节点索引。对于单个节点 i，最小搜索代价和根节点索引均为 freq[i]，即 cost[i][i] &#x3D; freq[i]，root[i][i] &#x3D; i。通过计算子树规模为 k（k ≥ 2）的所有可能根节点的代价，并选择最小代价的根节点，更新 cost[i][j] 和 root[i][j]：cost[i][j] &#x3D; min{cost[i][r-1] + cost[r+1][j] + sum(freq[i…j])}，其中 r 为 i 到 j 之间的根节点索引，sum(freq[i…j]) 表示频率数组 freq[i] 到 freq[j] 的总和。通过递归的方式从根节点选择数组中的根节点索引构建二叉搜索树。具体地，对于根节点索引 root[i][j]，我们可以将节点 root[i][j] 作为根节点，递归构建左子树和右子树。  </p>
-<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>最优二叉搜索树（Optimal Binary Search Tree）是一种基于动态规划的问题。我们可以定义一个二维数组 cost[i][j]，其中 cost[i][j] 表示包含节点 i 到 j 的子树的最小搜索代价。定义一个一个二维数组 root[i][j]，其中 root[i][j] 存储节点 i 到 j 子树的根节点索引。对于单个节点 i，最小搜索代价和根节点索引均为 freq[i]，即 cost[i][i] = freq[i]，root[i][i] = i。通过计算子树规模为 k（k ≥ 2）的所有可能根节点的代价，并选择最小代价的根节点，更新 cost[i][j] 和 root[i][j]：cost[i][j] = min{cost[i][r-1] + cost[r+1][j] + sum(freq[i…j])}，其中 r 为 i 到 j 之间的根节点索引，sum(freq[i…j]) 表示频率数组 freq[i] 到 freq[j] 的总和。通过递归的方式从根节点选择数组中的根节点索引构建二叉搜索树。具体地，对于根节点索引 root[i][j]，我们可以将节点 root[i][j] 作为根节点，递归构建左子树和右子树。  </p>
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include &lt;iostream&gt;
 #include &lt;vector&gt;
 #include &lt;limits&gt;
@@ -393,10 +386,8 @@ int main() &#123;
     optimalBST(freq, n);
 
     return 0;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 
       
 
@@ -793,5 +784,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

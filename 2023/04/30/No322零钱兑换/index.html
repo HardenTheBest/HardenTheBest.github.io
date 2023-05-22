@@ -181,10 +181,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第322题-零钱兑换"><a href="#第322题-零钱兑换" class="headerlink" title="第322题.零钱兑换"></a>第322题.零钱兑换</h1><span id="more"></span> 
-
-<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总额。计算并返回可以凑成总金额所需的 最少的硬币个数 。如果没有任何一种硬币组合能组成总金额，返回 -1 。你可以认为每种硬币的数量是无限的。 </p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给你一个整数数组 coins ，表示不同面额的硬币；以及一个整数 amount ，表示总额。计算并返回可以凑成总金额所需的 最少的硬币个数 。如果没有任何一种硬币组合能组成总金额，返回 -1 。你可以认为每种硬币的数量是无限的。 </p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/coin-change">https://leetcode.cn/problems/coin-change</a>)  </p>
-<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>本题可以使用动态规划算法，定义一个集合dp，dp[i]记录组成金额为i的最少硬币个数,若硬币面值为coin，那么显然dp[i]等于dp[i-coin]+1(有解的情况下)，为了无需判断是否有误解，我们一开始就将集合dp中的值设为amount+1，这样我们就只需遍历i&#x3D;1~amount，在i-coin&gt;&#x3D;0的情况下，将min(dp[i],dp[i-coin])的结果赋给dp[i],最后只需判断dp[amount]是否大于amount，如果是则是无解，返回-1，否则直接返回dp[amount]  </p>
+<h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>本题可以使用动态规划算法，定义一个集合dp，dp[i]记录组成金额为i的最少硬币个数,若硬币面值为coin，那么显然dp[i]等于dp[i-coin]+1(有解的情况下)，为了无需判断是否有误解，我们一开始就将集合dp中的值设为amount+1，这样我们就只需遍历i=1~amount，在i-coin&gt;=0的情况下，将min(dp[i],dp[i-coin])的结果赋给dp[i],最后只需判断dp[amount]是否大于amount，如果是则是无解，返回-1，否则直接返回dp[amount]  </p>
 <h2 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h2><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 
@@ -207,9 +206,8 @@ int main() &#123;
     vector&lt;int&gt; coins&#123; 2 &#125;;
     int amount = 3;
     cout &lt;&lt; coinChange(coins, amount) &lt;&lt; endl;
-&#125;  
-</code></pre>
-<h2 id="解决过程中出现的错误"><a href="#解决过程中出现的错误" class="headerlink" title="解决过程中出现的错误"></a>解决过程中出现的错误</h2><p>因为在一开始初始化集合dp时用的INT_MAX,导致在判断min(dp[i],dp[i-coin]+1)时，dp[i-coin]本来就是INT_MAX，导致+1后因为计算机二进制编码的原因，溢出，最后得到的结果是一个恒大的负数，导致比原来的还小，最终结果也是错误的。</p>
+&#125;
+</code></pre><h2 id="解决过程中出现的错误"><a href="#解决过程中出现的错误" class="headerlink" title="解决过程中出现的错误"></a>解决过程中出现的错误</h2><p>因为在一开始初始化集合dp时用的INT_MAX,导致在判断min(dp[i],dp[i-coin]+1)时，dp[i-coin]本来就是INT_MAX，导致+1后因为计算机二进制编码的原因，溢出，最后得到的结果是一个恒大的负数，导致比原来的还小，最终结果也是错误的。</p>
 
       
 
@@ -606,5 +604,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

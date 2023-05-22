@@ -16,7 +16,7 @@
 <meta property="og:description" content="第四章.贪心算法">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-19T02:45:54.000Z">
-<meta property="article:modified_time" content="2023-05-22T05:27:52.821Z">
+<meta property="article:modified_time" content="2023-05-22T06:54:24.830Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -181,9 +181,9 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第四章-贪心算法"><a href="#第四章-贪心算法" class="headerlink" title="第四章.贪心算法"></a>第四章.贪心算法</h1><span id="more"></span>  
-<h2 id="活动安排"><a href="#活动安排" class="headerlink" title="活动安排"></a>活动安排</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>有n个活动的集合E&#x3D;{1,2,…,n}，其中每个活动都要求使用同一资源，如演讲会场等，而在同一时间内只有一个活动能使用这一资源。每个活动i都有要求使用该资源的起始时间$s_i$ 和 结束时间$f_i$ ，且$s_i$ &lt; $f_i$。如果选择了活动i，那么在该活动的起始时间到结束时间里，资源都分配给了该活动，如果有两个活动它们的活动时间没有交叉，就说明它们时相容的。活动安排问题就是选出最大的相容活动子集合。  </p>
+<h2 id="活动安排"><a href="#活动安排" class="headerlink" title="活动安排"></a>活动安排</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>有n个活动的集合E={1,2,…,n}，其中每个活动都要求使用同一资源，如演讲会场等，而在同一时间内只有一个活动能使用这一资源。每个活动i都有要求使用该资源的起始时间$s_i$ 和 结束时间$f_i$ ，且$s_i$ &lt; $f_i$。如果选择了活动i，那么在该活动的起始时间到结束时间里，资源都分配给了该活动，如果有两个活动它们的活动时间没有交叉，就说明它们时相容的。活动安排问题就是选出最大的相容活动子集合。  </p>
 <h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>活动安排问题是可以用贪心算法有效求解的一个很好的例子。各活动的起始时间与结束时间分别存储在数组s和f中，如何按照结束时间将它们进行排序。算法一开始将选择活动1，然后根据结束时间先后挑选下一个与前面活动相容的活动，因此算法每次总是选择具有最早完成时间的相容活动加入到集合中。按这种方法选择相容活动为未安排活动留下尽可能多的时间。也就是说，该算法的贪心选择意义是，使剩余的可安排时间段极大化，以便安排尽可能多的相容活动。  </p>
-<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
 
@@ -241,13 +241,11 @@ int main()
             cout &lt;&lt; s[i] &lt;&lt; &quot; &quot; &lt;&lt; f[i] &lt;&lt; endl;
         &#125;
     &#125;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="最优装载"><a href="#最优装载" class="headerlink" title="最优装载"></a>最优装载</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>有一批集装箱要装上一艘重量为c的轮船。其中集装箱i的重量为 $w_i$ 。最优装载问题要求在装载体积不受限制的情况下，将尽可能多的集装箱装上轮船。  </p>
 <h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>最优装载问题可用贪心算法求解。采用重量最轻者先装的贪心选择策略，可产生最优装载问题的最优解。  </p>
-<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
 #include&lt;algorithm&gt;
@@ -285,13 +283,11 @@ int main()
         &#125;
     &#125;
     cout &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="哈夫曼编码"><a href="#哈夫曼编码" class="headerlink" title="哈夫曼编码"></a>哈夫曼编码</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>哈夫曼编码使广泛用于数据文件压缩的十分有效的编码方法。哈夫曼编码算法使用字符在文件中出现的频率表来建立一个用0、1串表示各字符的最优表示方式。给出现频率高的字符较短的编码，出现频率较低的字符以较长的编码，可以大大缩短总码长。  </p>
 <h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>哈夫曼算法以自底向上的方式构造表示最优前缀码的二叉树T。算法以C个叶节点开始，执行C-1次的合并运算后产生最终所要求的树T。编码字符集中每一个字符c的频率是f(c)。以f为键值的优先队列Q用在做贪心选择时有效地确定算法当前要合并的两棵具有最小频率的树。一旦两颗具有最小频率的树合并后，产生一棵新的树，其频率为合并的两棵树的频率之和并将新树插入优先队列Q。  </p>
-<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include &lt;iostream&gt;
 #include &lt;string&gt;
 #include &lt;unordered_map&gt;
@@ -366,13 +362,11 @@ int main() &#123;
         cout &lt;&lt; entry.first &lt;&lt; &quot; &quot; &lt;&lt; entry.second &lt;&lt; endl;
     &#125;
     return 0;
-&#125;  
-  
-</code></pre>
-<hr>
-<h2 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定一个带权有向图G&#x3D;(V,E)，其中每条边的权是非负实数。另外，给定V中的一个顶点，称为源。现在计算从源到所有其他各顶点的最短路径长度。这里路的长度是指路上各边权之和。  </p>
+&#125;
+</code></pre><hr>
+<h2 id="单源最短路径"><a href="#单源最短路径" class="headerlink" title="单源最短路径"></a>单源最短路径</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定一个带权有向图G=(V,E)，其中每条边的权是非负实数。另外，给定V中的一个顶点，称为源。现在计算从源到所有其他各顶点的最短路径长度。这里路的长度是指路上各边权之和。  </p>
 <h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>Dijkstra算法是解单源最短路径问题的一个贪心算法。其基本思想是，设置顶点集合S，并不断地做贪心选择来扩充这个集合。一个顶点属于集合S当且仅当从源到该顶点的最短路径已知。初始时，S中仅有源。设u时G的某一个顶点，把从源到u且中间只经过S中顶点的路径称为从源到u的特殊路径，并用数组记录当前每个顶点所对应的最短路特殊经长度。Dijkstra算法每次从V-S中取出具有最短特殊路长度的顶点u，将u添加到S中，同时对数组dist作必要的修改。一旦S包含了所有V中顶点，dist就记录了从源到所有其他顶点之间的最短路径长度。  </p>
-<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>  
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
 #include&lt;vector&gt;
 #include&lt;queue&gt;
@@ -431,12 +425,10 @@ vector&lt;int&gt; dijkstra(vector&lt;vector&lt;edge&gt;&gt;&amp; G, int s)
             &#125;
     &#125;
     return dist;
-&#125;  
-  
-</code></pre>
-<hr>
-<h2 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>设G&#x3D;(V,E)是无向连通带权图，即一个网络。E中每条边(v,w)的权为c[v][w]。如果G的一个子图G’是一棵包含G的所有顶点的树，则称G’为G的生成树。生成树上各边权的总和称为该生成树的耗费。在G的所有生成树中，耗费最小的生成树称为G的最小生成树。  </p>
-<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用贪心算法设计策略可以设计出构造最小生成树的有效算法。其中有两个算法：Prim算法和Kruskai算法，它们都利用率最小生成树的性质：设G&#x3D;(V,E)是连通带权图，U是V的真子集。如果(u,v) $\in$ E，且u $\in$ U，v $\in$ V-U，且在所有这样的边中，(u,v)的权c[u][v]最小，那么一定存在G的一棵最小生成树，它以(u,v)为其中一条边。<br>Prim算法：首先置S&#x3D;{1}，然后，主要S是V的真子集，就做如下贪心选择：选取满足条件i $\in$ S，j $\in$ V-S，且c[i][j]最小的边，并将顶点j添加到S中。这个过程一直进行到S&#x3D;V时为止，选取到的所有边恰好构成G的一棵最小生成树。<br>Kruskal算法：首先将G的n个顶点看成是n个孤立的连通分支，将所有的边按权从小到大排序；然后从第一条边开始，依边权递增的顺序查看每条边，并按下述方式连接两个不同的连通分支；当查看到第k条边(v,w)时，如果端点v和w分别时当前两个不同的连通分支T1和T2中的顶点时，就用边(v,w)将T1和T2连接成一个连通分支，然后继续查看第k+1条边。这个过程一直进行到只剩下一个连通分支为止。此时，这个连通分支就是G的一棵最小生成树。  </p>
+&#125;
+</code></pre><hr>
+<h2 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>设G=(V,E)是无向连通带权图，即一个网络。E中每条边(v,w)的权为c[v][w]。如果G的一个子图G’是一棵包含G的所有顶点的树，则称G’为G的生成树。生成树上各边权的总和称为该生成树的耗费。在G的所有生成树中，耗费最小的生成树称为G的最小生成树。  </p>
+<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用贪心算法设计策略可以设计出构造最小生成树的有效算法。其中有两个算法：Prim算法和Kruskai算法，它们都利用率最小生成树的性质：设G=(V,E)是连通带权图，U是V的真子集。如果(u,v) $\in$ E，且u $\in$ U，v $\in$ V-U，且在所有这样的边中，(u,v)的权c[u][v]最小，那么一定存在G的一棵最小生成树，它以(u,v)为其中一条边。<br>Prim算法：首先置S={1}，然后，主要S是V的真子集，就做如下贪心选择：选取满足条件i $\in$ S，j $\in$ V-S，且c[i][j]最小的边，并将顶点j添加到S中。这个过程一直进行到S=V时为止，选取到的所有边恰好构成G的一棵最小生成树。<br>Kruskal算法：首先将G的n个顶点看成是n个孤立的连通分支，将所有的边按权从小到大排序；然后从第一条边开始，依边权递增的顺序查看每条边，并按下述方式连接两个不同的连通分支；当查看到第k条边(v,w)时，如果端点v和w分别时当前两个不同的连通分支T1和T2中的顶点时，就用边(v,w)将T1和T2连接成一个连通分支，然后继续查看第k+1条边。这个过程一直进行到只剩下一个连通分支为止。此时，这个连通分支就是G的一棵最小生成树。  </p>
 <h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3>
       
 
@@ -824,5 +816,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

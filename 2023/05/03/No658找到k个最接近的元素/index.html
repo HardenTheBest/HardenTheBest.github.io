@@ -181,9 +181,8 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第658题-找到k个最接近的元素"><a href="#第658题-找到k个最接近的元素" class="headerlink" title="第658题.找到k个最接近的元素"></a>第658题.找到k个最接近的元素</h1><span id="more"></span>  
-
-<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个 排序好 的数组 arr ，两个整数 k 和 x ，从数组中找到最靠近 x（两数之差最小）的 k 个数。返回的结果必须要是按升序排好的。整数 a 比整数 b 更接近 x 需要满足：</p>
-<p>|a - x| &lt; |b - x| 或者|a - x| &#x3D;&#x3D; |b - x| 且 a &lt; b  </p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>给定一个 排序好 的数组 arr ，两个整数 k 和 x ，从数组中找到最靠近 x（两数之差最小）的 k 个数。返回的结果必须要是按升序排好的。整数 a 比整数 b 更接近 x 需要满足：</p>
+<p>|a - x| &lt; |b - x| 或者|a - x| == |b - x| 且 a &lt; b  </p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/find-k-closest-elements/">https://leetcode.cn/problems/find-k-closest-elements/</a>)  </p>
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><h3 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h3><p>最简单的就是将数组根据元素与目标数字的绝对值的大小进行排序，找到前k个最接近的元素，然后再从小到大排序后返回，时间复杂度为O($nlogn$)。  </p>
 <h3 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h3><p>利用二分查找和双指针，先利用二分查找寻找第一个大于等于x的位置，然后用双指针分别指向两边，判断大小后移动指针，直到找到k个元素。时间复杂度为O($logn$)。  </p>
@@ -209,9 +208,8 @@ int main() &#123;
         cout &lt;&lt; p &lt;&lt; &quot; &quot;;
     &#125;
     cout &lt;&lt; endl;
-&#125;  
-</code></pre>
-<h3 id="方法2-1"><a href="#方法2-1" class="headerlink" title="方法2"></a>方法2</h3><pre><code>#include&lt;iostream&gt;
+&#125;
+</code></pre><h3 id="方法2-1"><a href="#方法2-1" class="headerlink" title="方法2"></a>方法2</h3><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 
 using namespace std;
@@ -260,9 +258,8 @@ int main() &#123;
         cout &lt;&lt; p &lt;&lt; &quot; &quot;;
     &#125;
     cout &lt;&lt; endl;
-&#125;  
-</code></pre>
-<h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2><p>主要就是越界问题，还有就是vector<int>res(arr.begin()+l+1,arr.begin()+r)报错。</p>
+&#125;
+</code></pre><h2 id="解决过程中出现的问题"><a href="#解决过程中出现的问题" class="headerlink" title="解决过程中出现的问题"></a>解决过程中出现的问题</h2><p>主要就是越界问题，还有就是vector<int>res(arr.begin()+l+1,arr.begin()+r)报错。</p>
 
       
 
@@ -659,5 +656,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

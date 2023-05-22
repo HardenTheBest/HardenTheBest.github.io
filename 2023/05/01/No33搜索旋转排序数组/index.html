@@ -181,8 +181,7 @@
     <div class="article-entry" itemprop="articleBody">
       
         <h1 id="第33题-搜索旋转排序数组"><a href="#第33题-搜索旋转排序数组" class="headerlink" title="第33题.搜索旋转排序数组"></a>第33题.搜索旋转排序数组</h1><span id="more"></span>  
-
-<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>整数数组 nums 按升序排列，数组中的值 互不相同 。在传递给函数之前，nums 在预先未知的某个下标 k（0 &lt;&#x3D; k &lt; nums.length）上进行了 旋转，使数组变为 [nums[k], nums[k+1], …, nums[n-1], nums[0], nums[1], …, nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 在下标 3 处经旋转后可能变为 [4,5,6,7,0,1,2] 。给你 旋转后 的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。  </p>
+<h2 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h2><p>整数数组 nums 按升序排列，数组中的值 互不相同 。在传递给函数之前，nums 在预先未知的某个下标 k（0 &lt;= k &lt; nums.length）上进行了 旋转，使数组变为 [nums[k], nums[k+1], …, nums[n-1], nums[0], nums[1], …, nums[k-1]]（下标 从 0 开始 计数）。例如， [0,1,2,4,5,6,7] 在下标 3 处经旋转后可能变为 [4,5,6,7,0,1,2] 。给你 旋转后 的数组 nums 和一个整数 target ，如果 nums 中存在这个目标值 target ，则返回它的下标，否则返回 -1 。  </p>
 <p>你必须设计一个时间复杂度为 O(log n) 的算法解决此问题。  </p>
 <h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><p>[leetcode] (<a target="_blank" rel="noopener" href="https://leetcode.cn/problems/search-in-rotated-sorted-array/">https://leetcode.cn/problems/search-in-rotated-sorted-array/</a>)  </p>
 <h2 id="解法"><a href="#解法" class="headerlink" title="解法"></a>解法</h2><p>该题可以使用二分查找方法，虽然二分查找方法要求数组是已经排序好的，而本题本身不是有序的，但是我们将其分成左右两个部分时，总有一个部分时有序的，所以我们可以在常规的二分查找中判断哪一个部分时有序的，如果左部分是有序的，并且target介于nums[left]~nums[mid]之间，则在该部分寻找，否则在右部分寻找；如果右部分是有序的，同理。这样，我们就可以一直缩小在一半的范围寻找，直到找到target返回下标，或者没有找到返回-1，这样就得到一个时间复杂度为O(logn)的算法。  </p>
@@ -227,9 +226,8 @@ int main() &#123;
     vector&lt;int&gt; nums&#123; 3,1 &#125;;
     int target = 0;
     cout &lt;&lt; search(nums, target) &lt;&lt; endl;
-&#125;  
-</code></pre>
-<h2 id="解决过程中出现的错误"><a href="#解决过程中出现的错误" class="headerlink" title="解决过程中出现的错误"></a>解决过程中出现的错误</h2><p>没有考虑数组下标大小问题，导致越界。</p>
+&#125;
+</code></pre><h2 id="解决过程中出现的错误"><a href="#解决过程中出现的错误" class="headerlink" title="解决过程中出现的错误"></a>解决过程中出现的错误</h2><p>没有考虑数组下标大小问题，导致越界。</p>
 
       
 
@@ -626,5 +624,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>

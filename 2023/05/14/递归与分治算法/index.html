@@ -182,7 +182,7 @@
       
         <h1 id="第二章-递归与分治算法"><a href="#第二章-递归与分治算法" class="headerlink" title="第二章.递归与分治算法"></a>第二章.递归与分治算法</h1><span id="more"></span>  
 <h2 id="二分搜索技术"><a href="#二分搜索技术" class="headerlink" title="二分搜索技术"></a>二分搜索技术</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>二分搜索算法是运用分治策略的典型例子。给定已排好序的n个元素nums[0:n-1]，现在在者n个元素中找出已特定元素x。  </p>
-<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>将n个元素分成个数大致相同的两半，取nums[n&#x2F;2]与x作比较。如果x &#x3D; nums[n&#x2F;2]，则找到x，算法终止；如果x &lt; nums[n&#x2F;2]，则只在数组nums的左半部继续搜索x；如果x &gt; nums[n&#x2F;2],则只在数组nums的右半部继续搜索x。直到left指针大于right指针，则表示搜索结束，若没有搜索到目标元素x，则返回-1。  </p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>将n个元素分成个数大致相同的两半，取nums[n/2]与x作比较。如果x = nums[n/2]，则找到x，算法终止；如果x &lt; nums[n/2]，则只在数组nums的左半部继续搜索x；如果x &gt; nums[n/2],则只在数组nums的右半部继续搜索x。直到left指针大于right指针，则表示搜索结束，若没有搜索到目标元素x，则返回-1。  </p>
 <h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>#include&lt;iostream&gt;
 #include&lt;vector&gt;
 #include&lt;algorithm&gt;
@@ -208,9 +208,8 @@ int main()
     int x = 8;
     sort(nums.begin(), nums.end());
     cout &lt;&lt; BinarySearch(nums, x) &lt;&lt; endl;
-&#125;  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="合并排序"><a href="#合并排序" class="headerlink" title="合并排序"></a>合并排序</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>将n个元素进行排序  </p>
 <h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>合并排序算法是用分治策略实现对n个元素进行排序的算法，其基本思想是：将待排序元素分成大小大致相同的两个子集合，分别对两个子集合进行排序，最终将排好序的子集合合并成要求的排好序的集合。  </p>
 <h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>#include&lt;iostream&gt;
@@ -243,7 +242,7 @@ void merge(vector&lt;int&gt;&amp; nums, int left, int mid, int right, vector&lt;
         temp[t++] = nums[j++];
     &#125;
     t = 0;
-    
+
     while (left &lt;= right)
     &#123;
         nums[left++] = temp[t++];
@@ -277,9 +276,8 @@ int main()
         cout &lt;&lt; p &lt;&lt; &quot; &quot;;
     &#125;
     cout &lt;&lt; endl;
-&#125;  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="快速排序"><a href="#快速排序" class="headerlink" title="快速排序"></a>快速排序</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>将n个元素进行排序  </p>
 <h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>快速排序算法是基于分治策略的另一个排序算法，其基本思想是，对于输入的子数组a[p:r]，按以下三个步骤进行排序。<br>1.分解：以a[p]为基准元素将a[p:r]划分成3段a[p:q-1],a[q]和a[q+1:r]，使a[p:q-1]中任何一个元素小于等于a[q]，而a[q+1:r]中任何一个元素大于等于a[q]。下标q在划分过程中确定。<br>2.递归求解：通过递归调用快速排序算法，分别对a[p:q-1]和a[q+1:r]进行排序。<br>3.合并：由于对q[p:q-1]和a[q+1:r]的排序是就地进行的，因此在a[p:q-1]和a[q+1:r]都已排好的序后，不需要执行任何计算，a[p:r]则以排好序。 </p>
 <h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>
@@ -322,11 +320,9 @@ int main()
         cout &lt;&lt; p &lt;&lt; &quot; &quot;;
     &#125;
     cout &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
-<h2 id="线性时间选择"><a href="#线性时间选择" class="headerlink" title="线性时间选择"></a>线性时间选择</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定线性序集中n个元素和一个整数k（1&lt;&#x3D;k&lt;&#x3D;n），要求找到这n个元素中第k小的元素。  </p>
+&#125;
+</code></pre><hr>
+<h2 id="线性时间选择"><a href="#线性时间选择" class="headerlink" title="线性时间选择"></a>线性时间选择</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定线性序集中n个元素和一个整数k（1&lt;=k&lt;=n），要求找到这n个元素中第k小的元素。  </p>
 <h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>模仿快速排序算法设计出来的，基本思想也是对输入数组进行递归划分。与快速排序算法不同的是，它只对划分出的子数组之一进行递归处理。在每一次划分后，我们可以得到一个元素x的位置p，并且保证nums[l:p-1]中的元素小于等于x，nums[p+1:r]中的元素大于等于元素x。所以只要某次划分的 q 为第k 个下标的时候，我们就已经找到了答案。  </p>
 <h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include&lt;iostream&gt;
@@ -378,11 +374,10 @@ int main()
 &#123;
     vector&lt;int&gt; nums&#123; 1,4,3,5,7,3,6 &#125;;
     cout &lt;&lt; findKthSmallest(nums, 3) &lt;&lt; endl;
-&#125;  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 <h2 id="最接近点对问题"><a href="#最接近点对问题" class="headerlink" title="最接近点对问题"></a>最接近点对问题</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>给定平面上n个点，找其中的一对点，使得在n个点组成的所有点对中，该点对的距离最小。  </p>
-<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用分治法解决最近对问题，很自然的想法就是将集合S分成两个子集S1和S2，每个子集中有n&#x2F;2个点。然后在每个子集中递归地求其最接近的点对，在求出每个子集的最接近点对后，在合并步中，如果集合 S 中最接近的两个点都在子集S1或S2中，则问题很容易解决，如果这两个点分别在S1和S2中，问题就比较复杂了。<br>按x坐标升序进行排列，将所有点集合平均划分成两个部分，其中中间位为m，当n&#x3D;2，计算两个点的距离，算法结束。计算左部分点对中最接近的两个点，计算右部分点队中最接近的两个点，取d为左右两部分中各自两个点的最短距离的较小者；考虑到一个点在左部分，另一个点在右部分，如果x&lt;&#x3D;xm并且x&gt;&#x3D;xm-d,则将该点放在集合p1中；如果x&gt;xm并且x&lt;&#x3D;xm+d，将该点放在集合p2中。将集合p1和p2按y进行排序，对集合p1和p2中的每个点p(x,y)，在y坐标区间[y,y+d]内最多取出8个候选键，计算与p的最近距离d3，返回d与d3的较小者。  </p>
+<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用分治法解决最近对问题，很自然的想法就是将集合S分成两个子集S1和S2，每个子集中有n/2个点。然后在每个子集中递归地求其最接近的点对，在求出每个子集的最接近点对后，在合并步中，如果集合 S 中最接近的两个点都在子集S1或S2中，则问题很容易解决，如果这两个点分别在S1和S2中，问题就比较复杂了。<br>按x坐标升序进行排列，将所有点集合平均划分成两个部分，其中中间位为m，当n=2，计算两个点的距离，算法结束。计算左部分点对中最接近的两个点，计算右部分点队中最接近的两个点，取d为左右两部分中各自两个点的最短距离的较小者；考虑到一个点在左部分，另一个点在右部分，如果x&lt;=xm并且x&gt;=xm-d,则将该点放在集合p1中；如果x&gt;xm并且x&lt;=xm+d，将该点放在集合p2中。将集合p1和p2按y进行排序，对集合p1和p2中的每个点p(x,y)，在y坐标区间[y,y+d]内最多取出8个候选键，计算与p的最近距离d3，返回d与d3的较小者。  </p>
 <h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><pre><code>
 #include &lt;iostream&gt;
 #include &lt;math.h&gt;
@@ -494,8 +489,7 @@ int main()
   cout &lt;&lt; &quot;最近点对距离为：&quot;&lt;&lt; minDist &lt;&lt; endl;
   return 0;
 &#125;
-</code></pre>
-<hr>
+</code></pre><hr>
 <h2 id="逆序对问题"><a href="#逆序对问题" class="headerlink" title="逆序对问题"></a>逆序对问题</h2><h3 id="题目-5"><a href="#题目-5" class="headerlink" title="题目"></a>题目</h3><p>在数组中的两个数字，如果前面一个数字大于后面的数字，则这两个数字组成一个逆序对。输入一个数组，求出这个数组中的逆序对的总数。  </p>
 <h3 id="基本思想-5"><a href="#基本思想-5" class="headerlink" title="基本思想"></a>基本思想</h3><p>归并排序运用了分治算法的思想，求解该题可以利用归并排序的思想。区别在于并的过程，例如有两个已经排好序的数组等待合并。定义两个指针分别指向两个数组的头，比较两个指针指向的元素的大小，将较小者移到排好序的集合中，并且指针向后移一位，如果右部分的指针向后移了一位，就说明当前左部分指针的元素的逆序对数量加1。  </p>
 <h3 id="代码-5"><a href="#代码-5" class="headerlink" title="代码"></a>代码</h3><pre><code>
@@ -554,10 +548,8 @@ int main()
 &#123;
     vector&lt;int&gt; nums&#123; 7,5,6,4 &#125;;
     cout &lt;&lt; reversePairs(nums) &lt;&lt; endl;
-&#125;  
-  
-</code></pre>
-<hr>
+&#125;
+</code></pre><hr>
 
       
 
@@ -954,5 +946,20 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
 
 </div>
   </div>
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+        tex2jax: {
+            inlineMath: [ ["$","$"], ["\\(","\\)"] ],
+            skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+            processEscapes: true
+        }
+    });
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax();
+        for (var i = 0; i < all.length; ++i)
+            all[i].SourceElement().parentNode.className += ' has-jax';
+    });
+</script>
+<script src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
 </body>
 </html>
