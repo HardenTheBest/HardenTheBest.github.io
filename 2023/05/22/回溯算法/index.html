@@ -6,13 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Hexo</title>
+  <title>回溯算法 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://example.com/index.html">
+  <meta name="description" content="第五章.回溯算法">
+<meta property="og:type" content="article">
+<meta property="og:title" content="回溯算法">
+<meta property="og:url" content="http://example.com/2023/05/22/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="第五章.回溯算法">
 <meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2023-05-22T09:47:14.000Z">
+<meta property="article:modified_time" content="2023-05-22T13:09:21.377Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -156,16 +160,14 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            
-  
-    <article id="post-回溯算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+            <article id="post-回溯算法" class="article article-type-post " itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/22/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/">回溯算法</a>
+    <h1 class="article-title" itemprop="name">
+      回溯算法
     </h1>
   
 
@@ -178,12 +180,116 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="第五章-回溯算法"><a href="#第五章-回溯算法" class="headerlink" title="第五章.回溯算法"></a>第五章.回溯算法</h1>
-        
-          <a class="article-more-a" href="/2023/05/22/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/#more">more >></a>
-        
+        <h1 id="第五章-回溯算法"><a href="#第五章-回溯算法" class="headerlink" title="第五章.回溯算法"></a>第五章.回溯算法</h1><span id="more"></span>  
+<h2 id="装载问题"><a href="#装载问题" class="headerlink" title="装载问题"></a>装载问题</h2><h3 id="题目"><a href="#题目" class="headerlink" title="题目"></a>题目</h3><p>有一批共n个集装箱要装上2艘载重量分别为c1和c2的轮船，其中集装箱i的重量为 $w_i$ ，且 $\sum_{i=1}^{n} w_i \leqq c_1 + c_2$ 。装载问题要求确定，是否有一个合理的装载方案可将这n个集装箱装上这2艘轮船。如果有，找出一种装载方案。  </p>
+<h3 id="基本思想"><a href="#基本思想" class="headerlink" title="基本思想"></a>基本思想</h3><p>如果一个给定的装载问题有解，则采用下面的策略可以得到最优装载方案：先将第一艘轮船尽可能装满，然后将剩余的集装箱装上第二艘轮船。将第一艘轮船尽可能装满等价于选取全体集装箱的一个子集，使该子集中集装箱重量之和最接近c1。由此可见，装载问题等价于0-1背包问题。虽然可以用动态规划算法解决这个问题，但此处将使用回溯算法，时间复杂度为O($2^n$)。该算法在某些情况下由于动态规划算法。<br>用回溯法解装载问题时，用子集树表示其解空间显然使合适的。可行性约束函数可剪去不满足条件的子树。  </p>
+<h3 id="代码"><a href="#代码" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+void backtrack(vector&lt;int&gt;&amp; weight, int&amp; c1, int&amp; bestw, int&amp; curw, int n)
+&#123;
+    if (n == weight.size())
+    &#123;
+        if (curw &gt; bestw) bestw = curw;
+        return;
+    &#125;
+    if (weight[n] + curw &gt; c1)
+    &#123;
+        return;
+    &#125;
+
+    curw += weight[n];
+    backtrack(weight, c1, bestw, curw, n + 1);
+    curw -= weight[n];
+    backtrack(weight, c1, bestw, curw, n + 1);
+&#125;
+
+int maxLoading(vector&lt;int&gt;&amp; weight, int c1)
+&#123;
+    int bestw = 0;
+    int curw = 0;
+    backtrack(weight, c1, bestw, curw, 0);
+    return bestw;
+&#125;
+
+int main()
+&#123;
+    vector&lt;int&gt; weight&#123; 20,40,40 &#125;;
+    int total_weight = 0;
+    for (auto&amp; p : weight)
+    &#123;
+        total_weight += p;
+    &#125;
+    int c1 = 50, c2 = 50;
+    int max_c1 = maxLoading(weight, c1);
+    cout &lt;&lt; (c2 &gt;= (total_weight - max_c1)) ? 1 : 0;
+    cout &lt;&lt; endl;
+&#125;
+</code></pre><hr>
+<h2 id="子集合问题"><a href="#子集合问题" class="headerlink" title="子集合问题"></a>子集合问题</h2><h3 id="题目-1"><a href="#题目-1" class="headerlink" title="题目"></a>题目</h3><p>给你一个整数数组nums，数组中的元素互不相同。返回该数组所有可能的子集（幂集）。解集不能包含重复的子集。  </p>
+<h3 id="基本思想-1"><a href="#基本思想-1" class="headerlink" title="基本思想"></a>基本思想</h3><p>可以利用回溯算法，理论上“子集”是集合，是无序的，但是说以某个数开头的集合，便于我们进行递归，便于避免重复。这样，按顺序往下递归，每个元素只有两个选择，选与不选，我们就可以对元素进行选择。  </p>
+<h3 id="代码-1"><a href="#代码-1" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+
+using namespace std;
+
+void backtrack(vector&lt;vector&lt;int&gt;&gt;&amp; res, vector&lt;int&gt;&amp; nums, int start, vector&lt;int&gt;&amp; track) &#123;
+    res.push_back(track);
+    for (int i = start; i &lt; nums.size(); i++) &#123;
+        track.push_back(nums[i]);
+        backtrack(res, nums, i + 1, track);
+        track.pop_back();
+    &#125;
+&#125;
+
+vector&lt;vector&lt;int&gt;&gt; subsets(vector&lt;int&gt;&amp; nums) &#123;
+    vector&lt;vector&lt;int&gt;&gt;res;
+    vector&lt;int&gt;track;
+    backtrack(res, nums, 0, track);
+    return res;
+&#125;
+
+int main() &#123;
+    vector&lt;int&gt; nums&#123; 1,2,3 &#125;;
+    vector&lt;vector&lt;int&gt;&gt; result = subsets(nums);
+    for (const auto&amp; p : result) &#123;
+        for (const auto&amp; p1 : p) &#123;
+            cout &lt;&lt; p1 &lt;&lt; &quot; &quot;;
+        &#125;
+        cout &lt;&lt; endl;
+    &#125;
+&#125;
+</code></pre><hr>
+<h2 id="N皇后问题"><a href="#N皇后问题" class="headerlink" title="N皇后问题"></a>N皇后问题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>在n $\times$ n 格的棋盘上放置彼此不受攻击的n个皇后。按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。n皇后问题等价于，在n $\times$ n 格的棋盘上放置n个皇后，任何2个皇后不放在同一行或同一列或同一斜线上。  </p>
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>用回溯法解n后问题时，用完全n叉树表示解空间。可行性约束Place剪去不满足行、列和斜线约束的子树。</p>
+
       
 
+      
+        <div class="page-reward">
+          <a href="javascript:;" class="page-reward-btn tooltip-top">
+            <div class="tooltip tooltip-east">
+            <span class="tooltip-item">
+              赏
+            </span>
+            <span class="tooltip-content">
+              <span class="tooltip-text">
+                <span class="tooltip-inner">
+                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
+                  <div class="reward-box">
+                    
+                    
+                  </div>
+                </span>
+              </span>
+            </span>
+          </div>
+          </a>
+        </div>
       
     </div>
     <div class="article-info article-info-index">
@@ -192,16 +298,75 @@
       
 
       
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/22/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/">展开全文 >></a>
-        </p>
-      
 
+      
+        
+<div class="share-btn share-icons tooltip-left">
+  <div class="tooltip tooltip-east">
+    <span class="tooltip-item">
+      <a href="javascript:;" class="share-sns share-outer">
+        <i class="icon icon-share"></i>
+      </a>
+    </span>
+    <span class="tooltip-content">
+      <div class="share-wrap">
+        <div class="share-icons">
+          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
+            <i class="icon icon-weibo"></i>
+          </a>
+          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
+            <i class="icon icon-weixin"></i>
+          </a>
+          <a class="qq share-sns" href="javascript:;" data-type="qq">
+            <i class="icon icon-qq"></i>
+          </a>
+          <a class="douban share-sns" href="javascript:;" data-type="douban">
+            <i class="icon icon-douban"></i>
+          </a>
+          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
+            <i class="icon icon-qzone"></i>
+          </a>
+          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
+            <i class="icon icon-facebook"></i>
+          </a>
+          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
+            <i class="icon icon-twitter"></i>
+          </a>
+          <a class="google share-sns" href="javascript:;" data-type="google">
+            <i class="icon icon-google"></i>
+          </a>
+        </div>
+      </div>
+    </span>
+  </div>
+</div>
+
+<div class="page-modal wx-share js-wx-box">
+    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
+    <p>扫一扫，分享到微信</p>
+    <div class="wx-qrcode">
+      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2023/05/22/%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95/" alt="微信分享二维码">
+    </div>
+</div>
+
+<div class="mask js-mask"></div>
       
       <div class="clearfix"></div>
     </div>
   </div>
 </article>
+
+  
+<nav id="article-nav">
+  
+  
+    <a href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">贪心算法</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 <aside class="wrap-side-operation">
     <div class="mod-side-operation">
@@ -216,602 +381,32 @@
         </div>
         
         
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-贪心算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">贪心算法</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2023-05-19T02:45:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-19</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第四章-贪心算法"><a href="#第四章-贪心算法" class="headerlink" title="第四章.贪心算法"></a>第四章.贪心算法</h1>
-        
-          <a class="article-more-a" href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/19/%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
+        <div class="toc-container tooltip-left">
+            <i class="icon-font icon-category"></i>
+            <div class="tooltip tooltip-east">
+                <span class="tooltip-item">
+                </span>
+                <span class="tooltip-content">
+                    <div class="toc-article">
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第五章.回溯算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">装载问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E9%9B%86%E5%90%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">子集合问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">N皇后问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li></ol></li></ol></li></ol>
+                    </div>
+                </span>
             </div>
         </div>
         
-        
     </div>
 </aside>
 
 
 
-
-  
-    <article id="post-动态规划" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">动态规划</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/" class="archive-article-date">
-  	<time datetime="2023-05-18T01:40:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-18</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第三章-动态规划"><a href="#第三章-动态规划" class="headerlink" title="第三章.动态规划"></a>第三章.动态规划</h1>
-        
-          <a class="article-more-a" href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/18/%E5%8A%A8%E6%80%81%E8%A7%84%E5%88%92/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-递归与分治算法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/">递归与分治算法</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/" class="archive-article-date">
-  	<time datetime="2023-05-14T12:17:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-14</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第二章-递归与分治算法"><a href="#第二章-递归与分治算法" class="headerlink" title="第二章.递归与分治算法"></a>第二章.递归与分治算法</h1>
-        
-          <a class="article-more-a" href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/14/%E9%80%92%E5%BD%92%E4%B8%8E%E5%88%86%E6%B2%BB%E7%AE%97%E6%B3%95/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-unityAPI" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/11/unityAPI/">unityAPI</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/11/unityAPI/" class="archive-article-date">
-  	<time datetime="2023-05-11T13:46:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-11</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="Unity常见API"><a href="#Unity常见API" class="headerlink" title="Unity常见API"></a>Unity常见API</h1>
-        
-          <a class="article-more-a" href="/2023/05/11/unityAPI/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/11/unityAPI/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-No40组合总和II" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/">No40组合总和II</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/" class="archive-article-date">
-  	<time datetime="2023-05-05T07:26:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-05</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第40题-组合总和II"><a href="#第40题-组合总和II" class="headerlink" title="第40题.组合总和II"></a>第40题.组合总和II</h1>
-        
-          <a class="article-more-a" href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/05/No40%E7%BB%84%E5%90%88%E6%80%BB%E5%92%8CII/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-No287寻找重复数" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/">No287寻找重复数</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/" class="archive-article-date">
-  	<time datetime="2023-05-04T01:26:49.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-04</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第287题-寻找重复数"><a href="#第287题-寻找重复数" class="headerlink" title="第287题.寻找重复数"></a>第287题.寻找重复数</h1>
-        
-          <a class="article-more-a" href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/04/No287%E5%AF%BB%E6%89%BE%E9%87%8D%E5%A4%8D%E6%95%B0/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-No463岛屿的周长" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/">No463岛屿的周长</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/" class="archive-article-date">
-  	<time datetime="2023-05-03T13:49:37.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第463题-岛屿的周长"><a href="#第463题-岛屿的周长" class="headerlink" title="第463题.岛屿的周长"></a>第463题.岛屿的周长</h1>
-        
-          <a class="article-more-a" href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/03/No463%E5%B2%9B%E5%B1%BF%E7%9A%84%E5%91%A8%E9%95%BF/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-No200岛屿数量" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/">No200岛屿数量</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/" class="archive-article-date">
-  	<time datetime="2023-05-03T12:54:45.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第200题-岛屿数量"><a href="#第200题-岛屿数量" class="headerlink" title="第200题.岛屿数量"></a>第200题.岛屿数量</h1>
-        
-          <a class="article-more-a" href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/03/No200%E5%B2%9B%E5%B1%BF%E6%95%B0%E9%87%8F/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-No74搜索二维矩阵" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/">No74搜索二维矩阵</a>
-    </h1>
-  
-
-        
-        <a href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/" class="archive-article-date">
-  	<time datetime="2023-05-03T10:13:47.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2023-05-03</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="第74题-搜索二维矩阵"><a href="#第74题-搜索二维矩阵" class="headerlink" title="第74题.搜索二维矩阵"></a>第74题.搜索二维矩阵</h1>
-        
-          <a class="article-more-a" href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2023/05/03/No74%E6%90%9C%E7%B4%A2%E4%BA%8C%E7%BB%B4%E7%9F%A9%E9%98%B5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
   
   
-    <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
-    </nav>
+  
+
+  
+
+  
+
   
 
 
@@ -834,8 +429,8 @@
     <script>
 	var yiliaConfig = {
 		mathjax: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
