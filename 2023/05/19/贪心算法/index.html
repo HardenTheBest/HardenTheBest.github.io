@@ -16,7 +16,7 @@
 <meta property="og:description" content="第四章.贪心算法">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-19T02:45:54.000Z">
-<meta property="article:modified_time" content="2023-05-22T07:35:06.007Z">
+<meta property="article:modified_time" content="2023-05-22T09:44:49.848Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -429,7 +429,182 @@ vector&lt;int&gt; dijkstra(vector&lt;vector&lt;edge&gt;&gt;&amp; G, int s)
 </code></pre><hr>
 <h2 id="最小生成树"><a href="#最小生成树" class="headerlink" title="最小生成树"></a>最小生成树</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>设G=(V,E)是无向连通带权图，即一个网络。E中每条边(v,w)的权为c[v][w]。如果G的一个子图G’是一棵包含G的所有顶点的树，则称G’为G的生成树。生成树上各边权的总和称为该生成树的耗费。在G的所有生成树中，耗费最小的生成树称为G的最小生成树。  </p>
 <h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用贪心算法设计策略可以设计出构造最小生成树的有效算法。其中有两个算法：Prim算法和Kruskai算法，它们都利用率最小生成树的性质：设G=(V,E)是连通带权图，U是V的真子集。如果(u,v) $\in$ E，且u $\in$ U，v $\in$ V-U，且在所有这样的边中，(u,v)的权c[u][v]最小，那么一定存在G的一棵最小生成树，它以(u,v)为其中一条边。<br>Prim算法：首先置S={1}，然后，主要S是V的真子集，就做如下贪心选择：选取满足条件i $\in$ S，j $\in$ V-S，且c[i][j]最小的边，并将顶点j添加到S中。这个过程一直进行到S=V时为止，选取到的所有边恰好构成G的一棵最小生成树。<br>Kruskal算法：首先将G的n个顶点看成是n个孤立的连通分支，将所有的边按权从小到大排序；然后从第一条边开始，依边权递增的顺序查看每条边，并按下述方式连接两个不同的连通分支；当查看到第k条边(v,w)时，如果端点v和w分别时当前两个不同的连通分支T1和T2中的顶点时，就用边(v,w)将T1和T2连接成一个连通分支，然后继续查看第k+1条边。这个过程一直进行到只剩下一个连通分支为止。此时，这个连通分支就是G的一棵最小生成树。  </p>
-<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3>
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><h4 id="Prim算法"><a href="#Prim算法" class="headerlink" title="Prim算法"></a>Prim算法</h4><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;queue&gt;
+
+using namespace std;
+
+class Solution &#123;
+public:
+    int minimumCost(int N, vector&lt;vector&lt;int&gt;&gt;&amp; connections) &#123;
+        int E = connections.size();
+        if (E &lt; N - 1) &#123;
+            return -1; // minimum spanning tree need at least N - 1 edges
+        &#125;
+
+        vector&lt;vector&lt;pair&lt;int, int&gt;&gt;&gt; graph(N + 1, vector&lt;pair&lt;int, int&gt;&gt;());
+        // Construct the adjacent graph
+        for (const auto&amp; e : connections) &#123; // loop each edge e
+            graph[e[0]].push_back(make_pair(e[1], e[2]));
+            graph[e[1]].push_back(make_pair(e[0], e[2]));
+        &#125;
+
+        if (graph[1].empty()) &#123;
+            return -1;
+        &#125;
+
+        auto cmp = [](auto&amp; a, auto&amp; b) &#123;
+            return a.second &gt; b.second;
+        &#125;;
+
+        priority_queue&lt;pair&lt;int, int&gt;, vector&lt;pair&lt;int, int&gt;&gt;, decltype(cmp)&gt; pq(cmp);
+        vector&lt;bool&gt; visited(N + 1, false);
+
+        visited[1] = true;
+        int selected = 0; // number of edges selected in MST
+        // Choose 1 as the starting vertex
+        for (const auto&amp; e : graph[1]) &#123;
+            pq.push(e);
+        &#125;
+
+        int res = 0;
+        while (!pq.empty()) &#123;
+            auto cur = pq.top(); pq.pop();
+            if (visited[cur.first]) &#123;
+                continue;
+            &#125;
+            visited[cur.first] = true;
+            res += cur.second;
+            selected++;
+            if (selected == N - 1) &#123;
+                return res;
+            &#125;
+
+            for (auto&amp; neighbor : graph[cur.first]) &#123;
+                pq.push(&#123; neighbor.first, neighbor.second &#125;);
+            &#125;
+        &#125;
+
+        return -1;
+    &#125;
+&#125;;
+</code></pre><h4 id="Kruskal算法"><a href="#Kruskal算法" class="headerlink" title="Kruskal算法"></a>Kruskal算法</h4><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;algorithm&gt;
+#include&lt;numeric&gt;
+
+using namespace std;
+
+
+class Solution &#123;
+    vector&lt;int&gt; parents;
+public:
+    int find(int x) &#123;
+        if (x != parents[x]) &#123;
+            parents[x] = find(parents[x]);
+        &#125;
+        return parents[x];
+    &#125;
+
+    bool isConnected(int a, int b) &#123;
+        return find(a) == find(b);
+    &#125;
+
+    void connect(int a, int b) &#123;
+        int pa = find(a);
+        int pb = find(b);
+        if (pa != pb) parents[pa] = pb;
+    &#125;
+
+    int minimumCost(int n, vector&lt;vector&lt;int&gt;&gt;&amp; connections) &#123;
+        parents = vector&lt;int&gt;(n + 1);
+        //iota函数，对一个范围的数据进行赋值
+        iota(parents.begin(), parents.end(), 0);
+
+        sort(connections.begin(), connections.end(), [](vector&lt;int&gt;&amp; a, vector&lt;int&gt;&amp; b) &#123;
+            return a[2] &lt; b[2];
+            &#125;);
+
+        int ans = 0, cnt = n;
+        for (auto&amp; e : connections) &#123;
+            if (isConnected(e[0], e[1])) &#123;
+                continue;
+            &#125;
+            ans += e[2];
+            n--;
+            connect(e[0], e[1]);
+        &#125;
+        return n == 1 ? ans : -1;
+    &#125;
+&#125;;
+</code></pre><hr>
+<h2 id="多机调度问题"><a href="#多机调度问题" class="headerlink" title="多机调度问题"></a>多机调度问题</h2><h3 id="题目-5"><a href="#题目-5" class="headerlink" title="题目"></a>题目</h3><p>设有n个独立的作业{1,2,…,n}，有m台相同的机器进行加工处理。作业i所需的处理时间为 $t_i$ 。现约定，任何作业可以在任何一台机器上加工处理，但未完工前不允许中断处理，任何作业不能拆分成更小的子作业。多机调度问题要求给出一种作业调度方案，使所给的n个作业在尽可能短的时间内由m台机器加工处理完成。  </p>
+<h3 id="基本思想-5"><a href="#基本思想-5" class="headerlink" title="基本思想"></a>基本思想</h3><p>这个问题是一个NP完全问题，到目前为止还没有有效的解法。有时，这类问题用贪心选择策略可以设计出较好的近似算法。采用最长处理时间作业优先的贪心选择策略，可以设计出解多机调度问题的较好的近似算法。按此策略，当n&lt;=m时，只要将机器i的[0,$t_i$]时间区间分配给作业i即可。当n&gt;m时，先将n个作业依其所需的处理时间从大到小排序，在依此顺序将作业分配给空闲的机器。  </p>
+<h3 id="代码-5"><a href="#代码-5" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt; 
+
+using namespace std;
+
+#define N 7 
+#define M 3 
+int s[M] = &#123; 0, 0, 0 &#125;;
+
+//求出目前处理作业的时间和最小的机器号 
+int min(int m) &#123;
+    int min = 0;
+    int i;
+    for (i = 1; i &lt; m; i++) &#123;
+        if (s[min] &gt; s[i]) &#123;
+            min = i;
+        &#125;
+    &#125;
+    return min;
+&#125;
+//求最终结果（最长处理时间） 
+int max(int s[], int num) &#123;
+    int max = s[0];
+    for (int i = 1; i &lt; num; i++) &#123;
+        if (max &lt; s[i])
+            max = s[i];
+    &#125;
+    return max;
+&#125;
+//机器数大于待分配作业数 
+int setwork1(int t[], int n) &#123;
+    int i = 0;
+    for (; i &lt; n; i++) &#123;
+        s[i] = t[i];
+    &#125;
+    int ma = max(s, N);
+    return ma;
+&#125;
+//机器数小于待分配作业数 
+int setwork2(int t[], int n) &#123;
+    int i;
+    int mi = 0;
+    for (i = 0; i &lt; n; i++) &#123;
+        mi = min(M);
+        cout &lt;&lt; &quot;接下来由&quot; &lt;&lt; mi + 1 &lt;&lt; &quot;号机器处理任务&quot; &lt;&lt; i + 1 &lt;&lt; endl;
+        s[mi] = s[mi] + t[i];
+    &#125;
+    int ma = max(s, M);
+    return ma;
+&#125;
+int main() 
+&#123;
+    int time[N] = &#123; 16, 14, 6, 5, 4, 3, 2 &#125;;//处理时间按从大到小排序 
+    int maxtime;
+    if (M &gt;= N)
+        maxtime = setwork1(time, N);
+    else
+        maxtime = setwork2(time, N);
+    cout &lt;&lt; &quot;最多耗费时间&quot; &lt;&lt; maxtime &lt;&lt; endl;
+&#125;
+</code></pre><hr>
+
       
 
       
@@ -551,7 +726,7 @@ vector&lt;int&gt; dijkstra(vector&lt;vector&lt;edge&gt;&gt;&amp; G, int s)
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第四章.贪心算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8%E5%AE%89%E6%8E%92"><span class="toc-number">1.1.</span> <span class="toc-text">活动安排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E8%A3%85%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">最优装载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.</span> <span class="toc-text">哈夫曼编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="toc-number">1.4.</span> <span class="toc-text">单源最短路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91"><span class="toc-number">1.5.</span> <span class="toc-text">最小生成树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-4"><span class="toc-number">1.5.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-4"><span class="toc-number">1.5.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-4"><span class="toc-number">1.5.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%9B%9B%E7%AB%A0-%E8%B4%AA%E5%BF%83%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第四章.贪心算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B4%BB%E5%8A%A8%E5%AE%89%E6%8E%92"><span class="toc-number">1.1.</span> <span class="toc-text">活动安排</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E4%BC%98%E8%A3%85%E8%BD%BD"><span class="toc-number">1.2.</span> <span class="toc-text">最优装载</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81"><span class="toc-number">1.3.</span> <span class="toc-text">哈夫曼编码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84"><span class="toc-number">1.4.</span> <span class="toc-text">单源最短路径</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91"><span class="toc-number">1.5.</span> <span class="toc-text">最小生成树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-4"><span class="toc-number">1.5.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-4"><span class="toc-number">1.5.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-4"><span class="toc-number">1.5.3.</span> <span class="toc-text">代码</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Prim%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.3.1.</span> <span class="toc-text">Prim算法</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Kruskal%E7%AE%97%E6%B3%95"><span class="toc-number">1.5.3.2.</span> <span class="toc-text">Kruskal算法</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A4%9A%E6%9C%BA%E8%B0%83%E5%BA%A6%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.</span> <span class="toc-text">多机调度问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-5"><span class="toc-number">1.6.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-5"><span class="toc-number">1.6.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-5"><span class="toc-number">1.6.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
