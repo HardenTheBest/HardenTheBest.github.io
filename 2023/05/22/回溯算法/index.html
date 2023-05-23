@@ -16,7 +16,7 @@
 <meta property="og:description" content="第五章.回溯算法">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-22T09:47:14.000Z">
-<meta property="article:modified_time" content="2023-05-22T13:09:21.377Z">
+<meta property="article:modified_time" content="2023-05-23T14:56:35.621Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -265,7 +265,80 @@ int main() &#123;
 &#125;
 </code></pre><hr>
 <h2 id="N皇后问题"><a href="#N皇后问题" class="headerlink" title="N皇后问题"></a>N皇后问题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>在n $\times$ n 格的棋盘上放置彼此不受攻击的n个皇后。按照国际象棋的规则，皇后可以攻击与之处在同一行或同一列或同一斜线上的棋子。n皇后问题等价于，在n $\times$ n 格的棋盘上放置n个皇后，任何2个皇后不放在同一行或同一列或同一斜线上。  </p>
-<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>用回溯法解n后问题时，用完全n叉树表示解空间。可行性约束Place剪去不满足行、列和斜线约束的子树。</p>
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>用回溯法解n后问题时，用完全n叉树表示解空间。可行性约束Place剪去不满足行、列和斜线约束的子树。  </p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+#include&lt;vector&gt;
+#include&lt;string&gt;
+
+using namespace std;
+
+void backtrack(vector&lt;string&gt;&amp; board, int row, vector&lt;vector&lt;string&gt;&gt;&amp; result)
+&#123;
+    if (row == board.size())
+    &#123;
+        result.push_back(board);
+        return;
+    &#125;
+    int n = board[row].size();
+    for (int col = 0; col &lt; n; col++) 
+    &#123;
+        bool valid = true;
+        // check if a queen can be placed at (row, col) without being attacked
+        for (int i = 0; i &lt; row; i++) 
+        &#123;
+            if (board[i][col] == &#39;Q&#39;) 
+            &#123;
+                valid = false;
+                break;
+            &#125;
+        &#125;
+        for (int i = row - 1, j = col - 1; i &gt;= 0 &amp;&amp; j &gt;= 0; i--, j--) 
+        &#123;
+            if (board[i][j] == &#39;Q&#39;) 
+            &#123;
+                valid = false;
+                break;
+            &#125;
+        &#125;
+        for (int i = row - 1, j = col + 1; i &gt;= 0 &amp;&amp; j &lt; n; i--, j++) 
+        &#123;
+            if (board[i][j] == &#39;Q&#39;) 
+            &#123;
+                valid = false;
+                break;
+            &#125;
+        &#125;
+        if (valid) 
+        &#123;
+            board[row][col] = &#39;Q&#39;;
+            backtrack(board, row + 1, result);
+            board[row][col] = &#39;.&#39;;
+        &#125;
+    &#125;
+&#125;
+
+vector&lt;vector&lt;string&gt;&gt; NQueens(int n)
+&#123;
+    vector&lt;string&gt; board(n, string(n, &#39;.&#39;));
+    vector&lt;vector&lt;string&gt;&gt; result;
+    backtrack(board, 0, result);
+    return result;
+&#125;
+
+int main()
+&#123;
+    int n = 4;
+    vector&lt;vector&lt;string&gt;&gt; result = NQueens(n);
+    for (int i = 0; i &lt; result.size(); i++) &#123;
+        for (int j = 0; j &lt; n; j++) &#123;
+            cout &lt;&lt; result[i][j] &lt;&lt; endl;
+        &#125;
+        cout &lt;&lt; endl;
+    &#125;
+&#125;
+</code></pre><hr>
+<h2 id="图的m着色问题"><a href="#图的m着色问题" class="headerlink" title="图的m着色问题"></a>图的m着色问题</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定无向连通图G和m种不同的颜色。用这些颜色为图G的各顶点着色，每个顶点着一种颜色。是否有一种着色法，使G种每条边的2个顶点着有不同颜色？这个问题是图的m可着色判定问题。若一个图最少需要m种颜色才能使图中每条边连接的2个顶点着不同的颜色，则称这个数m为该图的色数。求一个图的色数m的问题称为图的m可着色优化问题。  </p>
 
       
 
@@ -388,7 +461,7 @@ int main() &#123;
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第五章.回溯算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">装载问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E9%9B%86%E5%90%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">子集合问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">N皇后问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E4%BA%94%E7%AB%A0-%E5%9B%9E%E6%BA%AF%E7%AE%97%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第五章.回溯算法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">装载问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AD%90%E9%9B%86%E5%90%88%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">子集合问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#N%E7%9A%87%E5%90%8E%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">N皇后问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%BE%E7%9A%84m%E7%9D%80%E8%89%B2%E9%97%AE%E9%A2%98"><span class="toc-number">1.4.</span> <span class="toc-text">图的m着色问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
