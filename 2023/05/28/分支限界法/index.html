@@ -16,7 +16,7 @@
 <meta property="og:description" content="第六章.分支限界法">
 <meta property="og:locale" content="en_US">
 <meta property="article:published_time" content="2023-05-28T02:42:01.000Z">
-<meta property="article:modified_time" content="2023-05-28T03:42:50.380Z">
+<meta property="article:modified_time" content="2023-05-28T06:30:48.476Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
   
@@ -386,6 +386,472 @@ void main()
     cout &lt;&lt; &quot;最大装载量为&quot; &lt;&lt; bestw &lt;&lt; endl;
 &#125;
 </code></pre><hr>
+<h2 id="布线问题"><a href="#布线问题" class="headerlink" title="布线问题"></a>布线问题</h2><h3 id="题目-2"><a href="#题目-2" class="headerlink" title="题目"></a>题目</h3><p>印刷电路板将布线区域划分成n*m个方格阵列。精确的电路布线问题要求确定连接方格a的中点到方格b的中点的最短布线方案。在布线时，电路只能沿直线或直角布线。为了避免线路相交，已布了线的方格做了封锁标记，其他线路不允许穿过被封锁的方格。  </p>
+<h3 id="基本思想-2"><a href="#基本思想-2" class="headerlink" title="基本思想"></a>基本思想</h3><p>布线问题的解空间是一个图。借此问题的队列式分支限界法从起始位置a开始将它作为第一个扩展结点。与该扩展结点相邻且可达的方格成为可行结点被加入到活结点队列中，并且将这些方格标记为1，即从起始方格a到这些方格的距离为1。接着，从活结点队列中取出队首结点作为下一个扩展结点，并将与当前扩展结点相邻且未被标记过的方格标记为2，并存入活结点队列中。这个过程一直继续到算法搜索到目标方格b或活结点队列为空时为止。</p>
+<h3 id="代码-2"><a href="#代码-2" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include &lt;iostream&gt;
+#include&lt;iomanip&gt;
+#include &lt;queue&gt;
+using namespace std;
+int m = 8;
+int n = 8;
+int grid[10][10];
+int indexcount = 0;
+
+struct Position
+&#123;
+    int row;
+    int col;
+&#125;;
+void showPath()
+&#123;
+    for (int i = 0; i &lt; 10; i++)
+    &#123;
+
+        for (int j = 0; j &lt; 10; j++)
+            cout &lt;&lt; setw(3)&lt;&lt;grid[i][j] &lt;&lt; &quot; &quot;;
+        cout &lt;&lt; endl;
+    &#125;
+    cout &lt;&lt; &quot;------------------&quot; &lt;&lt; endl;
+&#125;
+bool FindPath(Position start, Position finish, int&amp; PathLen, Position*&amp; path)
+&#123;
+    //计算从起点位置start到目标位置finish的最短布线路径，找到最短布线路//径则返回true，否则返回false
+
+    if ((start.row == finish.row) &amp;&amp; (start.col == finish.col))
+    &#123;
+        PathLen = 0;
+        cout &lt;&lt; &quot;start=finish&quot; &lt;&lt; endl;
+        return true;
+    &#125; //start=finish
+
+    //设置方格阵列“围墙”
+    //初始化图，-1为未访问
+    for (int i = 1; i &lt; 9; i++)
+    &#123;
+        for (int j = 1; j &lt; 9; j++)
+            grid[i][j] = -1;
+
+    &#125;
+
+    //添加阻挡点
+    grid[2][3] = -2;
+    for (int i = 0; i &lt;= m + 1; i++)
+        grid[0][i] = grid[n + 1][i] = -2; //顶部和底部
+    for (int i = 0; i &lt;= n + 1; i++)
+        grid[i][0] = grid[i][m + 1] = -2; //左翼和右翼
+    //初始化相对位移
+    cout &lt;&lt; &quot;完整图&quot; &lt;&lt; endl;
+    showPath();
+
+    Position offset[4];
+    offset[0].row = 0;
+    offset[0].col = 1;//右
+    offset[1].row = 1;
+    offset[1].col = 0;//下
+    offset[2].row = 0;
+    offset[2].col = -1;//左
+    offset[3].row = -1;
+    offset[3].col = 0;//上
+    int NumOfNbrs = 4;//相邻方格数
+    Position here, nbr;
+    here.row = start.row;
+    here.col = start.col;
+    grid[start.row][start.col] = 0;
+    //标记可达方格位置
+    cout &lt;&lt; &quot;布线前图&quot; &lt;&lt; endl;
+    showPath();
+
+    queue&lt;Position&gt; Q;
+    do  //标记相邻可达方格
+    &#123;
+        for (int I = 0; I &lt; NumOfNbrs; I++)
+        &#123;
+            nbr.row = here.row + offset[I].row;
+            nbr.col = here.col + offset[I].col;
+            if (grid[nbr.row][nbr.col] == -1)
+            &#123;
+                //该方格未被标记                             
+                grid[nbr.row][nbr.col] = grid[here.row][here.col] + 1;
+            &#125;
+            if ((nbr.row == finish.row) &amp;&amp; (nbr.col == finish.col)) break; //完成布线
+            Q.push(nbr);
+
+
+        &#125;
+        //是否到达目标位置finish？
+        if ((nbr.row == finish.row) &amp;&amp; (nbr.col == finish.col)) break;//完成布线
+        //活结点队列是否非空？
+        if (Q.empty()) return false;//无解
+
+        here = Q.front();
+        Q.pop();//取下一个扩展结点
+
+
+        indexcount++;
+        // cout&lt;&lt;&quot;下一节点&quot;&lt;&lt;indexcount&lt;&lt;endl;
+    &#125; while (true);
+
+    //构造最短布线路径
+    PathLen = grid[finish.row][finish.col];
+    path = new Position[PathLen];
+    //从目标位置finish开始向起始位置回溯
+    here = finish;
+    for (int j = PathLen - 1; j &gt;= 0; j--)
+    &#123;
+        path[j] = here;
+        //找前驱位置
+        for (int i = 0; i &lt; NumOfNbrs; i++)
+        &#123;
+            nbr.row = here.row + offset[i].row;
+            nbr.col = here.col + offset[i].col;
+            if (grid[nbr.row][nbr.col] == j)
+            &#123;
+                // cout&lt;&lt;j&lt;&lt;endl;
+                break;
+            &#125;
+        &#125;
+        here = nbr;//向前移动
+    &#125;
+    return PathLen;
+&#125;
+int main()
+&#123;
+    Position start;
+    start.col = 1;
+    start.row = 1;
+    cout &lt;&lt; &quot;布线起点&quot; &lt;&lt; endl;
+    cout &lt;&lt; start.col &lt;&lt; &quot; &quot; &lt;&lt; start.row &lt;&lt; endl;
+    Position finish;
+    finish.row = 3;
+    finish.col = 4;
+    cout &lt;&lt; &quot;布线结束点&quot; &lt;&lt; endl;
+    cout &lt;&lt; finish.col &lt;&lt; &quot; &quot; &lt;&lt; finish.row &lt;&lt; endl;
+    int PathLen = 0;
+    Position* path;
+
+    FindPath(start, finish, PathLen, path);
+    cout &lt;&lt; &quot;布线后路径图&quot; &lt;&lt; endl;
+    showPath();
+    cout &lt;&lt; &quot;路径&quot; &lt;&lt; endl;
+    for (int i = 0; i &lt; PathLen; i++)
+    &#123;
+        cout &lt;&lt; path[i].col &lt;&lt; &quot; &quot; &lt;&lt; path[i].row &lt;&lt; endl;
+    &#125;
+    cout &lt;&lt; &quot;布线问题完毕!&quot; &lt;&lt; endl;
+
+    system(&quot;pause&quot;);
+    return 0;
+&#125;
+</code></pre><hr>
+<h2 id="0-1背包"><a href="#0-1背包" class="headerlink" title="0-1背包"></a>0-1背包</h2><h3 id="题目-3"><a href="#题目-3" class="headerlink" title="题目"></a>题目</h3><p>给定n种物品和一背包。物品i的重量是 $w_i$ ，其价值为 $v_i$ ，背包的容量为c。问应如何选择装入背包中的物品，使得装入背包种物品的总价值最大。  </p>
+<h3 id="基本思想-3"><a href="#基本思想-3" class="headerlink" title="基本思想"></a>基本思想</h3><p>（1）0-1背包问题的解空间树是一颗子集树；（2）在分支限界法中还有一个活结点表，活结点表中的每个活结点只有一次机会成为扩展结点，一旦成为扩展结点就一次性产生其所有儿子结点，在这些儿子结点中，导致不可行解或导致非最优解的儿子结点被舍弃，其余的儿子结点则被加入到活结点中表。而对于0-1背包问题中的每个活结点只有两个儿子结点，分别表示对该物品选取或舍去；对于一个儿子结点是否能加入到活结点表中有两个条件用于判断，一个是约束函数判断能否满足背包容量约束，另一个是限界函数判断是否可能得到最优解。（3）为了能够比较快速的找到0-1背包问题的解，每次选取下一个活结点成为扩展结点的判断依据是当前情况下最有可能找到最优解的下一个结点。所以每次选择扩展结点采取如下方法：当前情况下，在活结点表中选择活结点的上界uprofit(通过限界函数Bound求出)最大的活结点成为当前的扩展结点。这一过程一直持续到找到所需的解或活结点表为空时为止。此过程体现出分支限界法以“最大效益优先”方式进行。（4）为了在活结点表中选择拥有最大的上界uprofit的活结点，在活结点表上实现优先队列。（5）通过上述第3点，可以求出0-1背包问题的最优值。为了求出0-1背包问题的最优解，对于每一个在 活结点表中的活结点创建一个树结点，树节点需要反映该结点的父节点和是否有左孩子（有左孩子 表示物品i选取了，没有左孩子表示物品i舍去了）。因此，可以构造一颗子集树，最优解就是从树根 到叶子结点的路径，子集树的第i层的所有结点就是在不同情况下对物品i的取舍结点。构造最优解的 顺序是从叶子结点到根结点的过程。  </p>
+<h3 id="代码-3"><a href="#代码-3" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+#include&lt;algorithm&gt;
+#include&lt;cstring&gt;
+#include&lt;cmath&gt;
+#include&lt;queue&gt;
+using namespace std;
+
+const int N = 100;//物品最大数量
+bool bestChoose[N];//辅助空间记录最优解
+
+//定义结点数据结构
+struct Node &#123;
+    int cp, rp;//cp为包内价值,rp为剩余物品的总价值
+    int rw;//背包剩余容量
+    int id;//物品号
+    bool x[N];//当前节点解向量
+    Node() &#123;
+        memset(x, 0, sizeof(x));//初始化x
+    &#125;
+    Node(int _cp, int _rp, int _rw, int _id) &#123;
+        cp = _cp;
+        rp = _rp;
+        rw = _rw;
+        id = _id;
+    &#125;
+&#125;;
+
+//物品数据结构
+struct Goods &#123;
+    int value;
+    int weight;
+&#125;goods[N];
+
+int bestValue;//最优解总价值
+int MaxWeight;//背包最大重量
+int n;//物品个数
+int sumWeight;//物品总重量
+int sumValue;//物品总价值
+
+
+//广度优先搜索求解
+int bfs();
+
+int main(void) &#123;
+    //输入物品个数
+    std::cout &lt;&lt; &quot;请输入物品的个数\n&quot;;
+    std::cin &gt;&gt; n;
+    if (n &gt; N) &#123;
+        std::cout &lt;&lt; &quot;n过大\n&quot;;
+        return -1;
+    &#125;
+    //输入背包的容量
+    std::cout &lt;&lt; &quot;请输入背包的最大容量\n&quot;;
+    std::cin &gt;&gt; MaxWeight;
+    std::cout &lt;&lt; &quot;请依次输入每个物品的重量w和价值v，用空格分开\n&quot;;
+    bestValue = 0;//初始化最优价值
+    sumWeight = 0;//所有物品的总重量与总价值
+    sumValue = 0;
+    for (int i = 0; i &lt; n; i++) &#123;
+        std::cin &gt;&gt; goods[i].weight &gt;&gt; goods[i].value;//输入第i个物品的重量与价值
+        //迭代求和
+        sumWeight += goods[i].weight;
+        sumValue += goods[i].value;
+    &#125;
+    //判断背包是否可以装下所有物品
+    if (sumWeight &lt;= MaxWeight) &#123;
+        bestValue = sumValue;
+        std::cout &lt;&lt; &quot;放入购物车的物品的最大价值为&quot; &lt;&lt; bestValue &lt;&lt; std::endl;
+        std::cout &lt;&lt; &quot;将所有物品放入购物车.\n&quot;;
+        return 0;
+    &#125;
+    //广度优先搜索
+    bfs();
+    std::cout &lt;&lt; &quot;放入背包的物品的最大价值为&quot; &lt;&lt; bestValue &lt;&lt; std::endl;
+    std::cout &lt;&lt; &quot;放入背包的物品的序号为: &quot;;
+    //输出序号
+    for (int i = 0; i &lt; n; i++) &#123;
+        if (bestChoose[i]) &#123;
+            std::cout &lt;&lt; i &lt;&lt; &quot;  &quot;;
+        &#125;
+    &#125;
+    std::cout &lt;&lt; &quot;\n&quot;;
+    return 0;
+&#125;
+
+//广度优先搜索子集树
+int bfs() &#123;
+    int t, tcp, trp, trw;
+    //当前层数t,当前节点背包价值,当前节点后面的价值,背包剩余容量
+
+    //新建队列
+    queue&lt;Node&gt; Queue;
+    //压入一个新节点
+    Queue.push(Node(0, sumValue, MaxWeight, 0));
+    //现在背包价值为0,剩余价值为sumValue,背包剩余容量为MaxWeight,当前层数为0
+
+    //广度优先搜索
+    while (!Queue.empty()) &#123;
+        //创建三个此时节点,左孩子，右孩子
+        Node parent, lchild, rchild;
+        //取出队列的头元素取出作为父节点即扩展节点
+        parent = Queue.front();
+        Queue.pop();
+        //当前处理节点的层数,即处理的为第几个物品
+        t = parent.id;
+
+        if (t &gt; n || parent.rw == 0) &#123;//parent为叶子 或者 当前节点的背包剩余容量为0
+            //判断是否为更优解
+            if (parent.cp &gt;= bestValue) &#123;
+                //迭代最优解
+                for (int i = 0; i &lt; n; i++) &#123;
+                    bestChoose[i] = parent.x[i];
+                &#125;
+                bestValue = parent.cp;
+            &#125;
+            continue;//不扩展此节点,剪枝
+        &#125;
+
+        //判断当前节点是否满足界限 扩展条件
+        if (parent.cp + parent.rp &lt; bestValue) &#123;//当前节点价值+此节点后面全部价值都小于当前最优解
+            continue;
+        &#125;
+
+
+        //左右孩子信息
+        tcp = parent.cp;
+        trp = parent.rp - goods[t].value;//无论t物品是否装入，孩子节点的剩余价值都会减少
+        trw = parent.rw;//剩余重量
+
+
+
+        //扩展左孩子，即装入t物品
+        //左孩子信息,当前节点变为新建左节点
+        //判断背包剩余容量是否可以装下t物品
+        if (trw &gt;= goods[t].weight) &#123;
+            lchild.rw = trw - goods[t].weight;
+            lchild.cp = tcp + goods[t].value;
+            lchild = Node(lchild.cp, trp, lchild.rw, t + 1);//创建左结点实例
+            //复制以前的解向量
+            for (int i = 0; i &lt; t; i++) &#123;
+                lchild.x[i] = parent.x[i];
+            &#125;
+            lchild.x[t] = true;//选中t物品
+            if (lchild.cp &gt; bestValue) &#123;
+                bestValue = lchild.cp;
+            &#125;
+            //左孩子入队列
+            Queue.push(lchild);
+        &#125;
+
+
+        //扩展右孩子
+        if (tcp + trp &gt;= bestValue) &#123;//不装入t还有可能超过最优解
+            rchild = Node(tcp, trp, trw, t + 1);
+            //复制以前的解向量
+            for (int i = 0; i &lt; t; i++) &#123;
+                rchild.x[i] = parent.x[i];
+            &#125;
+            rchild.x[t] = false;//不装入t节点
+            //右孩子入队列
+            Queue.push(rchild);
+        &#125;
+    &#125;
+
+    //返回最优价值
+    return bestValue;
+&#125;
+</code></pre><hr>
+<h2 id="最大团问题"><a href="#最大团问题" class="headerlink" title="最大团问题"></a>最大团问题</h2><h3 id="题目-4"><a href="#题目-4" class="headerlink" title="题目"></a>题目</h3><p>给定无向图G=(V,E)。如果U $\subseteq$ V，且对任意u，v $\in$ U 有(u,v) $\in$ E，则称U是G的完全子图。G的完全子图U是G的一个团当且仅当U不包含在G的更大的完全子图中。G的最大团是指G中所含顶点数最多的团。  </p>
+<h3 id="基本思想-4"><a href="#基本思想-4" class="headerlink" title="基本思想"></a>基本思想</h3><p>用变量 cliqueSize 表示与该结点相应的团的顶点数；level 表示结点在子集空间树中所处的层次；用 cliqueSize+ 剩余定点数作为顶点数上界 upperSize 的值，它是优先队列中元素的优先级。1. 子集树的根节点是初始扩展结点，其 cliqueSize 的值为 0；2. 在扩展内部结点时，首先考虑其左儿子结点。在左儿子结点处，将顶点 i 加入到当前团中，并检查该顶点与当前团中其他顶点之间是否都有边相连。由则将它插入活结点优先队列，否则就不是可行结点；3. 接着继续考察当前扩展结点的右儿子结点。当 upperSize&gt;bestn 时，右子树中可能含有最优解，此时将右儿子结点插入到活结点优先队列中；4. 从优先队列中取下一个活结点，重复 2-3，直到一个叶子结点成为扩展结点，找到最优解，算法结束。  </p>
+<h3 id="代码-4"><a href="#代码-4" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+
+using namespace std;
+
+#define maxm 55
+int g[maxm][maxm];//存图
+int vis[maxm];//存放已选择的点
+int cnt[maxm];//cnt[i]表示用编号&gt;=i的点能组成的最大团的点数
+int ans, n;
+bool dfs(int cur, int num) &#123;//从第cur个点开始向后添加，当前点是第num个
+    for (int i = cur + 1; i &lt;= n; i++) &#123;
+        if (cnt[i] + num &lt;= ans)//当前点后的所有点组成的最大团的最大点数+已经加入的点数&lt;=当前最佳答案（最好的情况都不可能超过当前最优解，则进行剪枝）
+            return 0;
+        if (g[cur][i])//两点相邻
+        &#123;
+            int ok = 1;
+            for (int j = 0; j &lt; num; j++)//是否和当前已经加入团的所有点相邻
+                if (!g[i][vis[j]])
+                &#123;
+                    ok = 0;
+                    break;
+                &#125;
+            if (ok) &#123;//当前点可以加入团中
+                vis[num] = i;
+                if (dfs(i, num + 1))//第一次dfs成功的一定是最大的
+                    return 1;
+            &#125;
+        &#125;
+    &#125;
+    ans = max(ans, num);
+    return (ans == max(num, ans) ? 0 : 1);
+&#125;
+void maxclique() &#123;
+    for (int i = n; i &gt; 0; i--)
+    &#123;
+        vis[0] = i;
+        dfs(i, 1);
+        cnt[i] = ans;
+    &#125;
+&#125;
+int main()
+&#123;
+    cin &gt;&gt; n;
+    for (int i = 1; i &lt;= n; i++)
+        for (int j = 1; j &lt;= n; j++) &#123;
+            cin &gt;&gt; g[i][j];
+            g[j][i] = g[i][j];
+        &#125;
+    maxclique();
+    cout &lt;&lt; cnt[1];
+    return 0;
+&#125;
+</code></pre><hr>
+<h2 id="旅行售货员问题"><a href="#旅行售货员问题" class="headerlink" title="旅行售货员问题"></a>旅行售货员问题</h2><h3 id="题目-5"><a href="#题目-5" class="headerlink" title="题目"></a>题目</h3><p>给定一系列城市和每对城市之间的距离，求解访问每一座城市一次并回到起始城市的最短回路。  </p>
+<h3 id="基本思想-5"><a href="#基本思想-5" class="headerlink" title="基本思想"></a>基本思想</h3><p>分支限界法是利用广度优先搜索的策略或者以最小耗费(最大效益)优先的方式搜索问题的解空间树，对于解空间树中的活节点只有一次机会成为拓展节点，活节点一旦成为扩展节点，那么将一次性产生其所有儿子节点。对于优先队列式的分支限界法，这些儿子节点中，不可行解或者一定不能成为最优解的儿子节点会被舍弃，其余儿子节点将会按照优先级依次存入一个活节点表(队列)，此后会挑出活节点表优先级最高的节点作为下次扩展节点，重复此过程，直至找到问题的最优解。  </p>
+<h3 id="代码-5"><a href="#代码-5" class="headerlink" title="代码"></a>代码</h3><pre><code>
+#include&lt;iostream&gt;
+
+using namespace std;
+const int NoEdge = -1;
+const int MAX = 20;
+int G[MAX][MAX];
+int ans[MAX], x[MAX];
+int bestc, cc;
+void init(int n)
+&#123;
+    int i, j, len;
+    memset(G, NoEdge, sizeof(G));
+    while (cin &gt;&gt; i &gt;&gt; j)
+    &#123;
+        if (i == 0 &amp;&amp; j == 0) break;
+        cin &gt;&gt; len;
+        G[i][j] = len;
+        G[j][i] = len;
+    &#125;
+    for (i = 1; i &lt;= n; i++) x[i] = i;
+    bestc = 0x7fffffff;
+    cc = 0;
+&#125;
+void Swap(int&amp; i, int&amp; j)
+&#123;
+    int temp;
+    temp = i;
+    i = j;
+    j = temp;
+&#125;
+void Traveling(int i, int n)
+&#123;
+    int j;
+    if (i == (n + 1))
+    &#123;
+        if ((G[x[n - 1]][x[n]] != NoEdge) &amp;&amp; ((cc + G[x[n]][1]) &lt; bestc) &amp;&amp; G[x[n]][1] != NoEdge)
+        &#123;
+            for (j = 1; j &lt; n; j++) ans[j] = x[j];
+            bestc = cc + G[x[n]][1];
+        &#125;
+    &#125;
+    else
+    &#123;
+        for (j = i; j &lt;= n; j++)
+        &#123;
+            if ((G[x[i - 1]][x[j]] != NoEdge) &amp;&amp; ((cc + G[x[i - 1]][x[j]]) &lt; bestc))
+            &#123;
+                Swap(x[i], x[j]);
+                cc += G[x[i - 1]][x[i]];
+                Traveling(i + 1, n);
+                cc -= G[x[i - 1]][x[i]];
+                Swap(x[i], x[j]);
+            &#125;
+        &#125;
+    &#125;
+&#125;
+void print(int n)
+&#123;
+    cout &lt;&lt; &quot;Minimun cost:&quot; &lt;&lt; bestc &lt;&lt; endl;
+    cout &lt;&lt; &quot;The best track：&quot;;
+    for (int i = 1; i &lt;= n; i++)
+        cout &lt;&lt; ans[i] &lt;&lt; &quot;-&gt;&quot;;
+    cout &lt;&lt; ans[1] &lt;&lt; endl;
+&#125;
+int main()
+&#123;
+    int n;
+    cout &lt;&lt; &quot;The number of citys:&quot; &lt;&lt; endl;
+    while (cin &gt;&gt; n &amp;&amp; n)
+    &#123;
+        cout &lt;&lt; &quot;the distance between two citys，such as 1 2 20，end with 0 0&quot; &lt;&lt; endl;
+        init(n);
+        Traveling(2, n);
+        print(n);
+    &#125;
+    return 1;
+&#125;
+</code></pre><hr>
 
       
 
@@ -508,7 +974,7 @@ void main()
                 </span>
                 <span class="tooltip-content">
                     <div class="toc-article">
-                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%88%86%E6%94%AF%E9%99%90%E7%95%8C%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第六章.分支限界法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">单源最短路径问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">装载问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol>
+                    <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E7%AC%AC%E5%85%AD%E7%AB%A0-%E5%88%86%E6%94%AF%E9%99%90%E7%95%8C%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">第六章.分支限界法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98"><span class="toc-number">1.1.</span> <span class="toc-text">单源最短路径问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE"><span class="toc-number">1.1.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3"><span class="toc-number">1.1.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81"><span class="toc-number">1.1.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A3%85%E8%BD%BD%E9%97%AE%E9%A2%98"><span class="toc-number">1.2.</span> <span class="toc-text">装载问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E7%BA%BF%E9%97%AE%E9%A2%98"><span class="toc-number">1.3.</span> <span class="toc-text">布线问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#0-1%E8%83%8C%E5%8C%85"><span class="toc-number">1.4.</span> <span class="toc-text">0-1背包</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%9C%80%E5%A4%A7%E5%9B%A2%E9%97%AE%E9%A2%98"><span class="toc-number">1.5.</span> <span class="toc-text">最大团问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-4"><span class="toc-number">1.5.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-4"><span class="toc-number">1.5.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-4"><span class="toc-number">1.5.3.</span> <span class="toc-text">代码</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%97%85%E8%A1%8C%E5%94%AE%E8%B4%A7%E5%91%98%E9%97%AE%E9%A2%98"><span class="toc-number">1.6.</span> <span class="toc-text">旅行售货员问题</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%A2%98%E7%9B%AE-5"><span class="toc-number">1.6.1.</span> <span class="toc-text">题目</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E6%80%9D%E6%83%B3-5"><span class="toc-number">1.6.2.</span> <span class="toc-text">基本思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81-5"><span class="toc-number">1.6.3.</span> <span class="toc-text">代码</span></a></li></ol></li></ol></li></ol>
                     </div>
                 </span>
             </div>
