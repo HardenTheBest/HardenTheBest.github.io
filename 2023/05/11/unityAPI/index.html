@@ -220,7 +220,7 @@ controller.Move(move_direct * PlayerMoveSpeed * Time.deltaTime);
 <p>方法：<br>Mathf.Max（float a,float b）<br>返回a,b两个值中的最大值<br>Mathf.Min（float a,float b）<br>返回a,b两个值中的最小值  </p>
 <h2 id="物体相关"><a href="#物体相关" class="headerlink" title="物体相关"></a>物体相关</h2><p>方法：<br>Instantiate（目标生成物体，生成位置，生成角度）<br>生成目标物体到目标的位置与角度<br>补充：<br>1.使用Instantiate克隆出的物体其属性和原物体全部一致，除了其位置与角度（因为你自己设置了）<br>2.当前类不继承自MonoBehaviour时，需要写GameObject.Instantiate()来进行实例化对象  </p>
 <p>方法：<br>Resources.Load(物体名称及其路径)<br>从本地加载物体<br>补充：<br>1.用Resources加载的资源，只能位于命名为Assets/Resources文件夹下。如果要使用这种方式进行加载，必须需要先创建Resources文件夹，然后将资源放置于该文件夹下<br>2.Resources.Load当中传入路径，用 / 来表示子文件夹<br>3.游戏打包导出时，Resources目录下的文件，不论是否在游戏使用，都会被打包到游戏包中增加游戏体积，因此应该尽量控制Resources目录下的文件数量<br>4.Resources加载资源的相关代码最好在打开场景时进行加载<br>5.Resources加载资源的方式是只读的，在游戏打包后就无法对文件夹的内容进行修改  </p>
-<p>方法：<br>GetComponent<T>()<br>获得某个物体上的组件<br>举例：<br>从敌人物体身上获得Enemy代码，并且完成扣血  </p>
+<p>方法：<br>GetComponent<T>()<br>获得某个物体上的组件<br>举例：<br>从敌人物体身上获得Enemy代码，并且完成扣血  </T></p>
 <pre><code>void OnTriggerStay(Collider other)
 &#123;
     if (other.gameObject.tag == &quot;Enemy&quot;)
@@ -232,8 +232,8 @@ controller.Move(move_direct * PlayerMoveSpeed * Time.deltaTime);
     &#125;
 &#125;
 </code></pre><p>补充：<br>1.GetComponent以及GameObject.Find此类的代码最好不要每帧调用，消耗性能，应该先获得一次，将其保存为变量，然后作为缓存来使用<br>2.如果不确定想获得的组件是否在此物体上存在，可以使用TryGetComponent来获得组件。当请求的Component不存在时，其不会在编辑器中分配内存，可以减小性能消耗  </p>
-<p>方法：<br>GetComponentsInChildren<T>()<br>获得此游戏对象及其所有子物体上的对应T组件<br>补充：<br>1.常和foreach一起使用，用于寻找子物体中某目标组件  </p>
-<p>方法：<br>AddComponent<T>()<br>为此游戏对象加上对应的组件T  </p>
+<p>方法：<br>GetComponentsInChildren<T>()<br>获得此游戏对象及其所有子物体上的对应T组件<br>补充：<br>1.常和foreach一起使用，用于寻找子物体中某目标组件  </T></p>
+<p>方法：<br>AddComponent<T>()<br>为此游戏对象加上对应的组件T  </T></p>
 <p>方法：<br>SetActive(bool active)<br>通过括号内参数来控制游戏物体激活状态。可以通过设置active为false,来取消此物体在场景内的激活状态<br>补充：<br>1.使用SetActive会导致内存分配，触发垃圾回收，造成较大的性能消耗<br>2.如果一开始就直接禁用的话，会导致无法加载此界面上得到组件和代码<br>3.关掉的物体，其身上的代码也不执行<br>4.UI类物体的隐藏，可以通过将其移到摄像机屏幕外的方式来进行(更高级一点可以通过设置相机的CullingMask来不进行绘制物体)  </p>
 <h2 id="检测相关"><a href="#检测相关" class="headerlink" title="检测相关"></a>检测相关</h2><h3 id="碰撞检测"><a href="#碰撞检测" class="headerlink" title="碰撞检测"></a>碰撞检测</h3><p>void OnCollisionEnter(Collision collision){}碰撞体进入时，触发检测<br>void OnCollisionExit(Collision collision){}碰撞体离开时，触发检测<br>void OnCollisionStay(Collision collision){}碰撞体持续碰撞，持续触发检测<br>补充：<br>1.碰撞双方必须都是碰撞体<br>2.其中一方必须要有刚体<br>3.刚体不能勾选IsKinematic<br>4.可通过参数collision，得到当前碰撞的物体以及其其他属性  </p>
 <h3 id="触发器检测"><a href="#触发器检测" class="headerlink" title="触发器检测"></a>触发器检测</h3><p>void OnTriggerEnter(Collider other)进入触发器时，触发检测<br>void OnTriggerExit(Collider other)退出触发器时，触发检测<br>void OnTriggerStay(Collider other)在触发器内时，持续触发检测<br>补充：<br>1.双方必须都有碰撞体<br>2.其中一方勾选IsTrigger<br>3.其中一方必须带有刚体  </p>
