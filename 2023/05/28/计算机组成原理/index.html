@@ -60,7 +60,7 @@
 <meta property="og:image" content="http://example.com/2023/05/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/45.png">
 <meta property="og:image" content="http://example.com/2023/05/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/46.png">
 <meta property="article:published_time" content="2023-05-28T06:42:28.000Z">
-<meta property="article:modified_time" content="2023-06-04T04:31:35.935Z">
+<meta property="article:modified_time" content="2023-06-04T04:41:12.307Z">
 <meta property="article:author" content="Yuan">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://example.com/2023/05/28/%E8%AE%A1%E7%AE%97%E6%9C%BA%E7%BB%84%E6%88%90%E5%8E%9F%E7%90%86/1.png">
@@ -1178,7 +1178,7 @@ CPU的四个基本功能：
 <font color="#00ffff">存储逻辑型（微程序控制器）：</font> 把微操作信号代码化，存入控制存储器中  
 1.每条机器指令转为一段微程序并存入CM中，控制信号由微指令产生。  
 2.优点：设计规整、调试、维修以及更改、扩充指令方便，易于实现自动化设计，已成为当前控制器的主流；但指令执行速度比组合逻辑控制器慢。  
-<font color="#00ffff">组合逻辑与存储逻辑结合型：PLA控制器</font>  
+<font color="#00ffff">组合逻辑与存储逻辑结合型：PLA控制器</font>   
 
 <h2 id="5-2-指令周期"><a href="#5-2-指令周期" class="headerlink" title="5.2 指令周期"></a>5.2 指令周期</h2><h3 id="指令周期的基本概念"><a href="#指令周期的基本概念" class="headerlink" title="指令周期的基本概念"></a>指令周期的基本概念</h3><p>指令周期：取指令、分析指令到执行完该指令所需的全部时间。<br>机器周期：把一条指令周期划分为若干机器周期，每个机器周期完成一个基本操作（又称CPU周期，从内存读取一条指令字最短时间。这就是说，一条指令的取出阶段（通常称为取指）需要一个CPU周期时间；不同的指令，包含不同数目的机器周期）。<br>时钟周期：一个机器周期内，要完成若干个微操作，因而要分若干个时间段，称为节拍，节拍宽度取决于CPU完成一次基本的微操作的基本时间，T周期。  </p>
 <p>取出和执行任何一条指令所需的最短时间为两个CPU周期。  </p>
